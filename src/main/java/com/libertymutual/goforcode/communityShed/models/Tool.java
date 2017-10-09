@@ -27,10 +27,10 @@ public class Tool {
 	@Column(nullable = false, length = 30)
 	private String tool_name;
 
-	@Column(nullable = false, length = 50)
+	@Column(nullable = false, length = 80)
 	private String tool_description;
 
-	@Column(nullable = true, length = 10)
+	@Column(nullable = true, length = 30)
 	private String category;
 	
 	@Column(nullable = true, length = 30)
@@ -42,7 +42,7 @@ public class Tool {
 	@Column(nullable = true)
 	private Date date_return;
 	
-	@Column(nullable = true, length = 10)
+	@Column(nullable = true, length = 15)
 	private String status;
 	
 	@Column(nullable = true)

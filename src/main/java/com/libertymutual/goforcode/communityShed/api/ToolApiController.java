@@ -16,7 +16,7 @@ import com.libertymutual.goforcode.communityShed.models.Tool;
 import com.libertymutual.goforcode.communityShed.repositories.ToolRepo;
 
 @RestController
-@RequestMapping("/api/tools")
+@RequestMapping("/tools")
 @CrossOrigin(origins = "*")
 
 public class ToolApiController {
@@ -43,7 +43,7 @@ public class ToolApiController {
 	
 	// Create a Tool
 	@PostMapping("")
-	public Tool create(@RequestBody Tool tool) {
+	public Tool createTool(@RequestBody Tool tool) {
 
 	tool = toolRepo.save(tool);
 
@@ -52,7 +52,8 @@ public class ToolApiController {
 		
 	// Update a Tool
 	@PutMapping("{id}")
-	public Tool UpdateTool(@RequestBody Tool tool, @PathVariable long id) {
+	public Tool updateTool(@RequestBody Tool tool, @PathVariable long id) {
+		System.out.println("Update id:" + id);
 		tool.setId(id);
 		return toolRepo.save(tool); 
 		
@@ -61,6 +62,7 @@ public class ToolApiController {
 	// Delete a Tool
 	@DeleteMapping("{id}")
 	public Tool deleteTool(@PathVariable long id) {
+		System.out.println("Deleted id:" + id);
 		Tool tool = toolRepo.findOne(id);
 //		userRepo.delete(tool.getUser());
 //		groupRepo.delete(tool.getGroup());
