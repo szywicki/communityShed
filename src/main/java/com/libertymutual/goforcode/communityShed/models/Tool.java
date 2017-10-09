@@ -25,10 +25,10 @@ public class Tool {
 
 	
 	@Column(nullable = false, length = 30)
-	private String tool_name;
+	private String toolName;
 
 	@Column(nullable = false, length = 80)
-	private String tool_description;
+	private String toolDescription;
 
 	@Column(nullable = true, length = 30)
 	private String category;
@@ -37,10 +37,10 @@ public class Tool {
 	private String brand;
 
 	@Column(nullable = true)
-	private Date date_checkout;
+	private Date dateCheckout;
 	
 	@Column(nullable = true)
-	private Date date_return;
+	private Date dateReturn;
 	
 	@Column(nullable = true, length = 15)
 	private String status;
@@ -50,14 +50,14 @@ public class Tool {
 
 	public Tool() {}
 
-	public Tool(String tool_name, String tool_description, String category, String brand, Date date_checkout, Date date_return, String status, URL image) {
+	public Tool(String toolName, String toolDescription, String category, String brand, Date dateCheckout, Date dateReturn, String status, URL image) {
 		
-		this.tool_name = tool_name;
-		this.tool_description = tool_description;
+		this.toolName = toolName;
+		this.toolDescription = toolDescription;
 		this.category = category;
 		this.brand = brand;
-		this.date_checkout = date_checkout;
-		this.date_return = date_return;
+		this.dateCheckout = dateCheckout;
+		this.dateReturn = dateReturn;
 		this.status = status;
 		this.image = image;
 
@@ -71,20 +71,20 @@ public class Tool {
 		this.id = id;
 	}
 
-	public String getTool_name() {
-		return tool_name;
+	public String getToolName() {
+		return toolName;
 	}
 
-	public void setTool_name(String tool_name) {
-		this.tool_name = tool_name;
+	public void setToolName(String toolName) {
+		this.toolName = toolName;
 	}
 
-	public String getTool_description() {
-		return tool_description;
+	public String getToolDescription() {
+		return toolDescription;
 	}
 
-	public void setTool_description(String tool_description) {
-		this.tool_description = tool_description;
+	public void setTool_description(String toolDescription) {
+		this.toolDescription = toolDescription;
 	}
 
 	public String getCategory() {
@@ -103,20 +103,20 @@ public class Tool {
 		this.brand = brand;
 	}
 
-	public Date getDate_checkout() {
-		return date_checkout;
+	public Date getDateCheckout() {
+		return dateCheckout;
 	}
 
-	public void setDate_checkout(Date date_checkout) {
-		this.date_checkout = date_checkout;
+	public void setDateCheckout(Date dateCheckout) {
+		this.dateCheckout = dateCheckout;
 	}
 
 	public Date getDate_return() {
-		return date_return;
+		return dateReturn;
 	}
 
-	public void setDate_return(Date date_return) {
-		this.date_return = date_return;
+	public void setDate_return(Date dateReturn) {
+		this.dateReturn = dateReturn;
 	}
 
 	public String getStatus() {

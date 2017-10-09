@@ -29,9 +29,29 @@ public class ToolApiController {
 	
 	// Get all Tools
 	@GetMapping("")
-	public List<Tool> getAllTools() {
-		return toolRepo.findAll();
-	
+	public List<Tool> getAllTools(String brand, String partialToolName) {
+
+			List<Tool> returnList;
+			
+			if (brand != null && partialToolName != null) {
+				returnList = toolRepo.findByBrandEqualsAndToolNameContaining(brand, partialToolName);
+			}
+			
+			else if (partialToolName != null) {
+				returnList = toolRepo.findByToolNameContaining(partialToolName);
+			}
+			
+			else if (brand != null) {
+				returnList = toolRepo.findByBrandEquals(brand);
+			}
+			
+			else {
+				returnList = toolRepo.findAll();
+			}
+			
+			return returnList;	
+		
+		
 	}
 	
 	// Get one Tool by Id
