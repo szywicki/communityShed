@@ -5,9 +5,9 @@
 //import org.springframework.web.bind.annotation.RestController;
 //
 //@RestController
-//@RequestMapping("/api/sessions")
+//@RequestMapping("/api/invites")
 //@CrossOrigin(origins = "*")
 //
-//public class SessionApiController {
+//public class InviteApiController {
 //
 //}

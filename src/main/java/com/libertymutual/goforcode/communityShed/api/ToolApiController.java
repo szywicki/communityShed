@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.libertymutual.goforcode.communityShed.models.Tool;
-import com.libertymutual.goforcode.communityShed.services.ToolRepo;
+import com.libertymutual.goforcode.communityShed.repositories.ToolRepo;
 
 @RestController
 @RequestMapping("/api/tools")

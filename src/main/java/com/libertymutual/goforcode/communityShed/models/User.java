@@ -2,7 +2,6 @@ package com.libertymutual.goforcode.communityShed.models;
 
 import java.util.List;
 
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,5 +19,4 @@ public class User {
 	@GeneratedValue(generator = "UserIdSeq", strategy = GenerationType.AUTO)
 	@SequenceGenerator(name = "UserIdSeq", sequenceName = "UserIdSeq")
 	private Long id;
-
 }

@@ -2,7 +2,6 @@ package com.libertymutual.goforcode.communityShed.models;
 
 import java.util.List;
 
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

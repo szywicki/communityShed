@@ -43,12 +43,24 @@ public class Tool {
 	private Date date_return;
 	
 	@Column(nullable = true, length = 10)
-	private Date status;
+	private String status;
 	
 	@Column(nullable = true)
 	private URL image;
 
-	public Tool() {
+	public Tool() {}
+
+	public Tool(String tool_name, String tool_description, String category, String brand, Date date_checkout, Date date_return, String status, URL image) {
+		
+		this.tool_name = tool_name;
+		this.tool_description = tool_description;
+		this.category = category;
+		this.brand = brand;
+		this.date_checkout = date_checkout;
+		this.date_return = date_return;
+		this.status = status;
+		this.image = image;
+
 	}
 
 	public Long getId() {
@@ -107,11 +119,11 @@ public class Tool {
 		this.date_return = date_return;
 	}
 
-	public Date getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(Date status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
