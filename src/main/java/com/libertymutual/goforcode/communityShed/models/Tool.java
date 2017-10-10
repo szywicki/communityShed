@@ -55,7 +55,7 @@ public class Tool {
 
 	public Tool() {}
 
-	public Tool(String toolName, String toolDescription, String category, String brand, Date dateCheckout, Date dateReturn, String status, int toolAge, URL image) {
+	public Tool(String toolName, String toolDescription, String category, String manufacturer, Date dateCheckout, Date dateReturn, String status, int toolAge, URL image) {
 		
 		this.toolName = toolName;
 		this.toolDescription = toolDescription;
