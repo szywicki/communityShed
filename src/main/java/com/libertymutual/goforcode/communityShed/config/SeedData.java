@@ -22,7 +22,7 @@ public class SeedData {
 
 	private PasswordEncoder encoder;
 	
-	public SeedData(ToolRepo toolRepo, UserRepo userRepo, GroupRepo groupRepo, InviteRepo inviteRepo, SessionRepo sessionRepo, RequestRepo requestRepo) {
+	public SeedData(ToolRepo toolRepo, UserRepo userRepo, GroupRepo groupRepo, InviteRepo inviteRepo, SessionRepo sessionRepo, RequestRepo requestRepo, PasswordEncoder encoder) {
 //	public SeedData(ToolRepo toolRepo) {
 	
 		this.encoder = encoder;
