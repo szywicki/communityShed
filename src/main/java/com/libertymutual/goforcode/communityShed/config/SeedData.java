@@ -23,7 +23,7 @@ public class SeedData {
 //	public SeedData(ToolRepo toolRepo) {
 	
 		toolRepo.save(new Tool("123456789012345678901234567890", "12345678901234567890123456789012345678901234567890123456789012345678901234567890", "123456789012345678901234567890", "123456789012345678901234567890", null, null, "123456789012345678901234567890", 1, null));
-//		toolRepo.save(new Tool("Circular Saw                  ", "Makita 15 Amp 7-1/4 in. Corded Circular Saw                                     ", "Power Tool                    ", "Makita                        ", null, null, "Available                     ", 1, null));
+		toolRepo.save(new Tool("Circular Saw", "Makita 15 Amp 7-1/4 in. Corded Circular Saw", "Power Tool", "Makita", null, null, "Available", 1, null));
 //		toolRepo.save(new Tool("Reciprocating Saw", "Milwaukee 15 Amp Super Reciprocating Saw", "Power Tool", "Milwaukee", 2017-10-01, 2017-10-01, "Available", 1, null));
 //		toolRepo.save(new Tool("Drill/Driver", "Dewalt 20-Volt Lithium Cordless Drill-Driver", "Power Tool", "Brand1", null, null, "Available", 1, null));
 //		toolRepo.save(new Tool("Hammer Drill", "Bosh 13.5 Amp Corded 1-78 in. Rotary Hammer Drill", "Power Tool", "Bosh", null, null, "Available", 1, null));
