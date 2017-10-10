@@ -27,30 +27,18 @@ public class ToolApiController {
 		
 	}
 	
-	// Get all Tools
+	// Get all Tools (of all users in all groups)
 	@GetMapping("")
 	public List<Tool> getAllTools(String brand, String toolName) {
 
 			List<Tool> returnList;
-			
-			if (brand != null && toolName != null) {
-				returnList = toolRepo.findByBrandEqualsAndToolNameContainingAllIgnoreCase(brand, toolName);
-			}
-			
-			else if (toolName != null) {
+			if (toolName != null) {
 				returnList = toolRepo.findByToolNameContainingAllIgnoreCase(toolName);
 			}
-			
-			else if (brand != null) {
-				returnList = toolRepo.findByBrandEqualsAllIgnoreCase(brand);
-			}
-			
 			else {
 				returnList = toolRepo.findAll();
 			}
-			
 			return returnList;	
-		
 		
 	}
 	
@@ -91,7 +79,7 @@ public class ToolApiController {
 		
 	}
 	
-	// Get all Users of a Group tools
+	// Get tools of all Users of a Group
 	
 	// Get all Users of all Groups Tools
 	

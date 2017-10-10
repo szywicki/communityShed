@@ -27,15 +27,6 @@ public class GroupApiController {
 		this.groupRepo = groupRepo;
 	}
 		
-	// Get all Groups
-	@GetMapping("")
-	public List<Group> getAllGroups(String groupName, String groupDescription) {
-
-		List<Group> returnList = groupRepo.findAll();
-		return returnList;	
-		
-	}
-	
 	
 	// Get one Group by Id
 	@GetMapping("{id}")
@@ -55,27 +46,7 @@ public class GroupApiController {
 	
 	}
 		
-	// Update a Group
-	@PutMapping("{id}")
-	public Group updateGroup(@RequestBody Group group, @PathVariable long id) {
-		System.out.println("Update id:" + id);
-		group.setId(id);
-		return groupRepo.save(group); 
-		
-	}
 	
-	// Delete a Group
-	@DeleteMapping("{id}")
-	public Group deleteGroup(@PathVariable long id) {
-		System.out.println("Deleted id:" + id);
-		Group group = groupRepo.findOne(id);
-//		userRepo.delete(tool.getUser());
-//		groupRepo.delete(tool.getGroup());
-		groupRepo.delete(id);
-		return group;
-		
-	}
-	
-	// Get all Users of a Group tools
+	// Get all Groups of a User
 	
 }
