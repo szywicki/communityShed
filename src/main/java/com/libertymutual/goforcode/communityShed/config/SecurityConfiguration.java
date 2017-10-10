@@ -24,15 +24,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 				.antMatchers(HttpMethod.GET, "/users/new", "/session/new", "/img/**", "/app/**", "/css/**", "/js/**").permitAll()
-				.antMatchers(HttpMethod.POST, "/users", "/api/users", "/session/mine").permitAll()
+				.antMatchers(HttpMethod.POST, "/api/users", "/session/mine").permitAll()
 				.antMatchers(HttpMethod.PUT, "/api/session/mine").permitAll()
 				.antMatchers(HttpMethod.OPTIONS).permitAll()
 				.anyRequest().authenticated()
 			.and()
-			.formLogin();
-//			.and()
+			.formLogin()
+			.and()
 //				.addFilterAfter(new CsrfIntoCookieFilter(), CsrfFilter.class)
-//				.csrf()
+				.csrf().disable();
 //				.csrfTokenRepository(tokenRepository());
 	}
 	

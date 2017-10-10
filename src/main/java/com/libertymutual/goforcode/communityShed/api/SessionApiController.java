@@ -43,6 +43,7 @@ public class SessionApiController {
 		if (token.isAuthenticated()) {
             SecurityContextHolder.getContext().setAuthentication(token);
         }
+		System.out.println(token.isAuthenticated());
         return token.isAuthenticated();
 	}
 	
@@ -52,7 +53,7 @@ public class SessionApiController {
 		return true;
 	}
 	
-	private class Credentials {
+	static class Credentials {
 		private String email;
 		private String password;
 		
