@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
+@Table(name="communityshed_tool")
 
 public class Tool {
 	@Id
@@ -46,11 +48,14 @@ public class Tool {
 	private String status;
 	
 	@Column(nullable = true)
+	private int toolAge;
+	
+	@Column(nullable = true)
 	private URL image;
 
 	public Tool() {}
 
-	public Tool(String toolName, String toolDescription, String category, String brand, Date dateCheckout, Date dateReturn, String status, URL image) {
+	public Tool(String toolName, String toolDescription, String category, String brand, Date dateCheckout, Date dateReturn, String status, int toolAge, URL image) {
 		
 		this.toolName = toolName;
 		this.toolDescription = toolDescription;
@@ -59,6 +64,7 @@ public class Tool {
 		this.dateCheckout = dateCheckout;
 		this.dateReturn = dateReturn;
 		this.status = status;
+		this.toolAge = toolAge;
 		this.image = image;
 
 	}
@@ -133,6 +139,14 @@ public class Tool {
 
 	public void setImage(URL image) {
 		this.image = image;
+	}
+
+	public int getToolAge() {
+		return toolAge;
+	}
+
+	public void setToolAge(int toolAge) {
+		this.toolAge = toolAge;
 	}
 
 
