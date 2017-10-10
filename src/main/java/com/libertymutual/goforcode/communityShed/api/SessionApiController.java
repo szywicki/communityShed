@@ -18,16 +18,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.libertymutual.goforcode.communityShed.models.User;
+import com.libertymutual.goforcode.communityShed.services.ShedUserDetailsService;
 
 @RestController
 @RequestMapping("/api/session")
 @CrossOrigin(origins = "*")
 public class SessionApiController {
 	
-	private UserDetailsService userDetails;
+	private ShedUserDetailsService userDetails;
 	private AuthenticationManager authManager;
 	
-	public SessionApiController(UserDetailsService userDetails, AuthenticationManager authManager)	{
+	public SessionApiController(ShedUserDetailsService userDetails, AuthenticationManager authManager)	{
 		this.userDetails = userDetails;
 		this.authManager = authManager;
 	}

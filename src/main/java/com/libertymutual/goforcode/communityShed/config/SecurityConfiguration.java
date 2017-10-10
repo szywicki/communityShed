@@ -1,10 +1,8 @@
 package com.libertymutual.goforcode.communityShed.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -12,16 +10,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.libertymutual.goforcode.communityShed.services.ShedUserDetailsService;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
-	private UserDetailsService users;
+	private UserDetailsService userDetailsService;
 	
-	public SecurityConfiguration(UserDetailsService users)	{
-		this.users = users;
+	public SecurityConfiguration(UserDetailsService userDetailsService)	{
+		this.userDetailsService = userDetailsService;
 	}
 	
 	@Override
@@ -33,11 +29,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.OPTIONS).permitAll()
 				.anyRequest().authenticated()
 			.and()
-			.formLogin()
-				.loginPage("/session/new")
-				.usernameParameter("email")
-				.passwordParameter("password")
-				.loginProcessingUrl("/session/mine");
+			.formLogin();
 //			.and()
 //				.addFilterAfter(new CsrfIntoCookieFilter(), CsrfFilter.class)
 //				.csrf()
@@ -49,11 +41,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return new BCryptPasswordEncoder();
 	}
 	
-	@Autowired
-	public void configureGlobalSecurity(AuthenticationManagerBuilder builder) throws Exception {
-		builder
-			.userDetailsService(users)
-			.passwordEncoder(passwordEncoder());
+	@Override
+	public UserDetailsService userDetailsService() {
+		return userDetailsService;
 	}
 	
 //	public CsrfTokenRepository tokenRepository() {
