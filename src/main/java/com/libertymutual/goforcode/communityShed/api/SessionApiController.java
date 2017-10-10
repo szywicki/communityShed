@@ -34,9 +34,9 @@ public class SessionApiController {
 	}
 	
 	@PutMapping("/mine")
-	public Boolean login(@RequestBody User user)	{
-		UserDetails details = userDetails.loadUserByUsername(user.getEmail());
-		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(details, user.getPassword(), details.getAuthorities());
+	public Boolean login(@RequestBody Credentials credentials)	{
+		UserDetails details = userDetails.loadUserByUsername(credentials.getEmail());
+		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(details, credentials.getPassword(), details.getAuthorities());
 		
 		authManager.authenticate(token);
 		
@@ -50,6 +50,24 @@ public class SessionApiController {
 	public Boolean logout(Authentication auth, HttpServletRequest request, HttpServletResponse response)	{
 		new SecurityContextLogoutHandler().logout(request, response, auth);
 		return true;
+	}
+	
+	private class Credentials {
+		private String email;
+		private String password;
+		
+		public String getEmail() {
+			return email;
+		}
+		public void setEmail(String email) {
+			this.email = email;
+		}
+		public String getPassword() {
+			return password;
+		}
+		public void setPassword(String password) {
+			this.password = password;
+		}
 	}
 
 }
