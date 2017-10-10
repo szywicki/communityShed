@@ -8,7 +8,7 @@ import com.libertymutual.goforcode.communityShed.models.Tool;
 //import com.libertymutual.goforcode.communityShed.repositories.RequestRepo;
 //import com.libertymutual.goforcode.communityShed.repositories.SessionRepo;
 import com.libertymutual.goforcode.communityShed.repositories.ToolRepo;
-//import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
+import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
 
 @Configuration
 
