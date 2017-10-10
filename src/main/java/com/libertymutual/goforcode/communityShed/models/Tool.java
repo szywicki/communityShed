@@ -36,7 +36,7 @@ public class Tool {
 	private String category;
 	
 	@Column(nullable = true, length = 30)
-	private String brand;
+	private String manufacturer;
 
 	@Column(nullable = true)
 	private Date dateCheckout;
@@ -60,7 +60,7 @@ public class Tool {
 		this.toolName = toolName;
 		this.toolDescription = toolDescription;
 		this.category = category;
-		this.brand = brand;
+		this.manufacturer = manufacturer;
 		this.dateCheckout = dateCheckout;
 		this.dateReturn = dateReturn;
 		this.status = status;
@@ -101,14 +101,6 @@ public class Tool {
 		this.category = category;
 	}
 
-	public String getBrand() {
-		return brand;
-	}
-
-	public void setBrand(String brand) {
-		this.brand = brand;
-	}
-
 	public Date getDateCheckout() {
 		return dateCheckout;
 	}
@@ -147,6 +139,14 @@ public class Tool {
 
 	public void setToolAge(int toolAge) {
 		this.toolAge = toolAge;
+	}
+
+	public String getManufacturer() {
+		return manufacturer;
+	}
+
+	public void setManufacturer(String manufacturer) {
+		this.manufacturer = manufacturer;
 	}
 
 
