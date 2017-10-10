@@ -32,7 +32,7 @@ public class Group {
 	@Column(nullable = false, length = 80)
 	private String groupDescription;
 	
-	@ManyToMany(fetch=FetchType.EAGER, mappedBy="group", cascade=CascadeType.ALL)
+	@ManyToMany()
 	private List<User> users;
 	
 	public Group() {}

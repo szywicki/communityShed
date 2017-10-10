@@ -48,11 +48,14 @@ public class Tool {
 	private String status;
 	
 	@Column(nullable = true)
+	private int toolAge;
+	
+	@Column(nullable = true)
 	private URL image;
 
 	public Tool() {}
 
-	public Tool(String toolName, String toolDescription, String category, String brand, Date dateCheckout, Date dateReturn, String status, URL image) {
+	public Tool(String toolName, String toolDescription, String category, String brand, Date dateCheckout, Date dateReturn, String status, int toolAge, URL image) {
 		
 		this.toolName = toolName;
 		this.toolDescription = toolDescription;
@@ -61,6 +64,7 @@ public class Tool {
 		this.dateCheckout = dateCheckout;
 		this.dateReturn = dateReturn;
 		this.status = status;
+		this.toolAge = toolAge;
 		this.image = image;
 
 	}
@@ -135,6 +139,14 @@ public class Tool {
 
 	public void setImage(URL image) {
 		this.image = image;
+	}
+
+	public int getToolAge() {
+		return toolAge;
+	}
+
+	public void setToolAge(int toolAge) {
+		this.toolAge = toolAge;
 	}
 
 
