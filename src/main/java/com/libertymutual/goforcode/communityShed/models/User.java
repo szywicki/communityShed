@@ -14,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -26,12 +27,9 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name="communityshed_user")
-public class User implements UserDetails{
+public class User implements UserDetails {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8263004476623342511L;
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -101,47 +99,41 @@ public class User implements UserDetails{
 		this.password = password;
 	}
 
-//	public List<Group> getGroups() {
-//		return groups;
-//	}
-//
-//	public void setGroups(List<Group> groups) {
-//		this.groups = groups;
-//	}
+	public List<Group> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(List<Group> groups) {
+		this.groups = groups;
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
+		return AuthorityUtils.commaSeparatedStringToAuthorityList("USER");
 	}
 
 	@Override
 	public String getUsername() {
-		// TODO Auto-generated method stub
-		return null;
+		return getEmail();
 	}
 
 	@Override
 	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 }
