@@ -8,6 +8,6 @@ import com.libertymutual.goforcode.communityShed.models.User;
 @Repository
 public interface UserRepo extends JpaRepository<User, Long> {
 		
-	User findByEmail(String email);
+	public User findByEmail(String email);
 	
 }
