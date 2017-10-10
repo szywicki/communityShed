@@ -11,10 +11,10 @@ import com.libertymutual.goforcode.communityShed.models.Tool;
 @Repository
 public interface ToolRepo extends JpaRepository<Tool, Long>{
 
-	List<Tool> findByBrandEquals(String brand);
+	List<Tool> findByBrandEqualsAllIgnoreCase(String brand);
 	
-	List<Tool> findByToolNameContaining(String partialToolName);
+	List<Tool> findByToolNameContainingAllIgnoreCase(String toolName);
 	
-	List<Tool> findByBrandEqualsAndToolNameContaining(String brand, String partialToolName);
+	List<Tool> findByBrandEqualsAndToolNameContainingAllIgnoreCase(String brand, String toolName);
 	
 }

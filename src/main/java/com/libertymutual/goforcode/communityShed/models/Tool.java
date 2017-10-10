@@ -42,7 +42,7 @@ public class Tool {
 	@Column(nullable = true)
 	private Date dateReturn;
 	
-	@Column(nullable = true, length = 15)
+	@Column(nullable = true, length = 30)
 	private String status;
 	
 	@Column(nullable = true)
@@ -83,7 +83,7 @@ public class Tool {
 		return toolDescription;
 	}
 
-	public void setTool_description(String toolDescription) {
+	public void setToolDescription(String toolDescription) {
 		this.toolDescription = toolDescription;
 	}
 
@@ -111,11 +111,11 @@ public class Tool {
 		this.dateCheckout = dateCheckout;
 	}
 
-	public Date getDate_return() {
+	public Date getDateReturn() {
 		return dateReturn;
 	}
 
-	public void setDate_return(Date dateReturn) {
+	public void setDateReturn(Date dateReturn) {
 		this.dateReturn = dateReturn;
 	}
 
@@ -134,4 +134,6 @@ public class Tool {
 	public void setImage(URL image) {
 		this.image = image;
 	}
+
+
 }

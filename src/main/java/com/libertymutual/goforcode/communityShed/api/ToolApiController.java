@@ -29,20 +29,20 @@ public class ToolApiController {
 	
 	// Get all Tools
 	@GetMapping("")
-	public List<Tool> getAllTools(String brand, String partialToolName) {
+	public List<Tool> getAllTools(String brand, String toolName) {
 
 			List<Tool> returnList;
 			
-			if (brand != null && partialToolName != null) {
-				returnList = toolRepo.findByBrandEqualsAndToolNameContaining(brand, partialToolName);
+			if (brand != null && toolName != null) {
+				returnList = toolRepo.findByBrandEqualsAndToolNameContainingAllIgnoreCase(brand, toolName);
 			}
 			
-			else if (partialToolName != null) {
-				returnList = toolRepo.findByToolNameContaining(partialToolName);
+			else if (toolName != null) {
+				returnList = toolRepo.findByToolNameContainingAllIgnoreCase(toolName);
 			}
 			
 			else if (brand != null) {
-				returnList = toolRepo.findByBrandEquals(brand);
+				returnList = toolRepo.findByBrandEqualsAllIgnoreCase(brand);
 			}
 			
 			else {

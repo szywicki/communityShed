@@ -1,13 +1,13 @@
-//package com.libertymutual.goforcode.communityShed.api;
-//
-//import org.springframework.web.bind.annotation.CrossOrigin;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RestController;
-//
-//@RestController
-//@RequestMapping("/api/sessions")
-//@CrossOrigin(origins = "*")
-//
-//public class SessionApiController {
-//
-//}
+package com.libertymutual.goforcode.communityShed.api;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/sessions")
+@CrossOrigin(origins = "*")
+
+public class SessionApiController {
+
+}

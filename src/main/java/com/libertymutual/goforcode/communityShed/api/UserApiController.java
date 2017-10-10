@@ -5,7 +5,7 @@
 //import org.springframework.web.bind.annotation.RestController;
 //
 //@RestController
-//@RequestMapping("/api/users")
+//@RequestMapping("/users")
 //@CrossOrigin(origins = "*")
 //
 //public class UserApiController {
