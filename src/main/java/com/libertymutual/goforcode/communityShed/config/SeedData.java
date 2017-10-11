@@ -39,10 +39,10 @@ public class SeedData {
 		
 		Tool tool =new Tool("Hammer Drill", "Bosh 13.5 Amp Corded 1-78 in. Rotary Hammer Drill", "Power Tool", "Bosh", null, null, "Available", 1, null, user1);	
 		toolRepo.save(new Tool("Flashlight", "Coast HP7 Focusing LED Flashlight", "Safety & Security", "Coast", null, null, "Available", 4, null, user1));
-		group1.addTool(tool);
+
 		groupRepo.save(group1);
 		toolRepo.save(new Tool("Drill/Driver", "Dewalt 20-Volt Lithium Cordless Drill-Driver", "Power Tool", "Brand1", null, null, "Available", 1, null, user2));
-		group1.addTool(tool);
+
 		groupRepo.save(group2);
 		
 //		Tool tool = new Tool("123456789012345678901234567890", "12345678901234567890123456789012345678901234567890123456789012345678901234567890", "123456789012345678901234567890", "123456789012345678901234567890", null, null, "123456789012345678901234567890", 1, null, user);
