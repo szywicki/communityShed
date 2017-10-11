@@ -160,6 +160,17 @@ public class Tool {
 		this.manufacturer = manufacturer;
 	}
 
+	@ManyToOne()
+	private Group group;
+
+	public Group getGroup() {
+		return group;
+	}
+
+	public void setGroup(Group group) {
+		this.group = group;
+	}
+
 	public User getOwner() {
 		return owner;
 	}
@@ -175,6 +186,5 @@ public class Tool {
 	public void setRequests(List<Request> requests) {
 		this.requests = requests;
 	}
-
 
 }
