@@ -1,5 +1,6 @@
 package com.libertymutual.goforcode.communityShed.models;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -116,5 +117,10 @@ public class Request {
 
 	public void setLoaner(User loaner) {
 		this.loaner = loaner;
+	}
+	
+	public String getLoanStartDateForBrowser()	{
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		return formatter.format(loanStartDate);
 	}
 }
