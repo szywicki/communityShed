@@ -32,9 +32,9 @@ public class SeedData {
 		User user2 = new User(encoder.encode("test"), "bob@ross.com", "Bob", "Ross");
 		userRepo.save(user2);
 		
-		group1.addUser(user1);
-		group2.addUser(user1);
-		group2.addUser(user2);
+		group1.addUserToGroup(user1);
+		group2.addUserToGroup(user1);
+		group2.addUserToGroup(user2);
 		
 		
 		Tool tool =new Tool("Hammer Drill", "Bosh 13.5 Amp Corded 1-78 in. Rotary Hammer Drill", "Power Tool", "Bosh", null, null, "Available", 1, null, user1);	

@@ -35,7 +35,7 @@ public class Group {
 	@Column(nullable = false, length = 80)
 	private String groupDescription;
 	
-	@ManyToMany()
+	@ManyToMany(fetch=FetchType.EAGER)
 	private List<User> users;
 	
 	public Group() {}
@@ -60,6 +60,10 @@ public class Group {
 		}
 		 users.add(user);
 	}
+	
+	public void removeUserFromGroup(User user) {
+		users.remove(user);
+	}
 
 	public String getGroupName() {
 		return groupName;
@@ -83,12 +87,5 @@ public class Group {
 
 	public void setUsers(List<User> users) {
 		this.users = users;
-	}
-	
-	public void addUser (User user) {
-		if (users == null) {
-			users = new ArrayList<User>();
-		}
-		users.add(user);
 	}
 }

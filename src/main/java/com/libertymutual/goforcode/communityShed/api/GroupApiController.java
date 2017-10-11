@@ -78,14 +78,16 @@ public class GroupApiController {
 	
 
 	@ApiOperation("Deletes user from selected group.")
-	@DeleteMapping("{userId}/groups")
-	public User deleteOne(@PathVariable long id) {
+	@PutMapping("{groupId}/users/{userId}")
+	public User deleteOne(@PathVariable long groupId, @PathVariable long userId) {
 		try {
-		User user = userRepo.findOne(id);
-		groupRepo.delete(id);
-		return user; 
-	} catch (EmptyResultDataAccessException erdae) {
-		return null;
+			User user = userRepo.findOne(userId);
+			Group group = groupRepo.findOne(userId);
+			group.removeUserFromGroup(user);
+			groupRepo.save(group);
+			return user;
+		} catch (EmptyResultDataAccessException erdae) {
+			return null;
+		}
 	}
-}
 }
