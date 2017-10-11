@@ -1,13 +1,12 @@
 package com.libertymutual.goforcode.communityShed.models;
 
-import java.sql.Date;
-import java.util.List;
-
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -34,13 +33,25 @@ public class Request {
 	@Column(nullable=false)
 	private String status;
 	
+	@ManyToOne
+	private Tool tool;
+	
+	@ManyToOne
+	private User borrower;
+	
+	@ManyToOne
+	private User loaner;
+	
 	public Request() {}
 	
-	public Request(Date loanStartDate, Date loanEndDate, String description, String status) {
+	public Request(Date loanStartDate, Date loanEndDate, String description, String status, Tool tool, User borrower, User loaner) {
 		this.loanStartDate = loanStartDate;
 		this.loanEndDate = loanEndDate;
 		this.description = description;
 		this.status = status;
+		this.tool = tool;
+		this.borrower = borrower;
+		this.loaner = loaner;
 	}
 
 	public Long getId() {
@@ -81,5 +92,29 @@ public class Request {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public Tool getTool() {
+		return tool;
+	}
+
+	public void setTool(Tool tool) {
+		this.tool = tool;
+	}
+
+	public User getBorrower() {
+		return borrower;
+	}
+
+	public void setBorrower(User borrower) {
+		this.borrower = borrower;
+	}
+
+	public User getLoaner() {
+		return loaner;
+	}
+
+	public void setLoaner(User loaner) {
+		this.loaner = loaner;
 	}
 }
