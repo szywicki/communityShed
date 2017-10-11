@@ -62,12 +62,11 @@ public class User implements UserDetails {
 
 	public User() {}
 	
-	public User(String password, String email, String firstName, String lastName, List<Tool> tools) {
+	public User(String password, String email, String firstName, String lastName) {
 		this.password = password;
 		this.email = email;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.tools = tools;
 	}
 	
 	public Long getId() {
