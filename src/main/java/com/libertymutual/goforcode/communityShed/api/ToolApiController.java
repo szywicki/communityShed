@@ -27,8 +27,6 @@ import io.swagger.annotations.ApiOperation;
 
 public class ToolApiController {
 	private ToolRepo toolRepo;
-	private UserRepo userRepo;
-	private GroupRepo groupRepo;
 
 	public ToolApiController(ToolRepo toolRepo) {
 		this.toolRepo = toolRepo;
@@ -80,27 +78,9 @@ public class ToolApiController {
 	public Tool deleteTool(@PathVariable long id) {
 		System.out.println("Deleted id:" + id);
 		Tool tool = toolRepo.findOne(id);
-		// userRepo.delete(tool.getUser());
-		// groupRepo.delete(tool.getGroup());
 		toolRepo.delete(id);
 		return tool;
 
 	}
-
-	@ApiOperation("Get list of tools of all Users of a Group")
-	@GetMapping("{groupId}/tools")
-	public List<Tool> getTools(@PathVariable long groupId) {
-		List<Tool> tools = null;
-		
-		Group group = groupRepo.findOne(groupId);
-
-		for (User user : group.getUsers()) {
-			tools.addAll(user.getTools());
-		}
-		
-		return tools;
-	}
-
-	// Get Tool Detail
 
 }
