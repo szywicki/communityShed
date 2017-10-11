@@ -1,6 +1,8 @@
 package com.libertymutual.goforcode.communityShed.models;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -17,6 +19,7 @@ import javax.persistence.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -67,6 +70,14 @@ public class User implements UserDetails {
 		this.email = email;
 		this.firstName = firstName;
 		this.lastName = lastName;
+	}
+	
+	public void addGroup(Group group) {
+		group.addUserToGroup(this);
+	}
+	
+	public void removeGroup (Group group) {
+//		group.removeUserFromGroup(this);
 	}
 	
 	public Long getId() {
@@ -170,4 +181,22 @@ public class User implements UserDetails {
 	public void setRequestsReceived(List<Request> requestsReceived) {
 		this.requestsReceived = requestsReceived;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof User) {
+			User u = (User) o;
+			return u.getId() == id;
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		if (id == null) {
+			return 0;
+		}
+		return id.hashCode();
+	}
+	
 }
