@@ -51,16 +51,17 @@ public class User implements UserDetails {
 	@ManyToMany(fetch=FetchType.EAGER, mappedBy="users", cascade=CascadeType.ALL)
 	private List<Group> groups;
 	
-	@OneToMany(fetch=FetchType.EAGER, mappedBy="user", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="owner", cascade=CascadeType.ALL)
 	private List<Tool> tools;
 
 	public User() {}
 	
-	public User(String password, String email, String firstName, String lastName) {
+	public User(String password, String email, String firstName, String lastName, List<Tool> tools) {
 		this.password = password;
 		this.email = email;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.tools = tools;
 	}
 	
 	public Long getId() {
