@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -55,4 +56,13 @@ public class UserApiController {
 		User user = userRepo.findOne(userId);
 		return user.getTools();
 	}
+	
+//	@ApiOperation("Deletes user from selected group.")
+//	@DeleteMapping("{userId}/groups")
+//	public void deleteOne(@PathVariable long id) {
+//		User user = userRepo.findOne(id);
+//		List<Group> userGroup = userRepo.findById(id);
+//		userRepo.delete(user);
+//		
+//	}
 }
