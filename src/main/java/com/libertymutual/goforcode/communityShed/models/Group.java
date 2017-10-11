@@ -35,7 +35,7 @@ public class Group {
 	@Column(nullable = false, length = 80)
 	private String groupDescription;
 	
-	@ManyToMany()
+	@ManyToMany(fetch=FetchType.EAGER)
 	private List<User> users;
 	
 	public Group() {}
