@@ -43,7 +43,6 @@ public class SessionApiController {
 		if (token.isAuthenticated()) {
             SecurityContextHolder.getContext().setAuthentication(token);
         }
-		System.out.println(token.isAuthenticated());
         return token.isAuthenticated();
 	}
 	

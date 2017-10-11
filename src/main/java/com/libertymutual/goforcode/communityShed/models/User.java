@@ -53,6 +53,12 @@ public class User implements UserDetails {
 	
 	@OneToMany(mappedBy="owner", cascade=CascadeType.ALL)
 	private List<Tool> tools;
+	
+	@OneToMany(mappedBy="borrower", cascade=CascadeType.ALL)
+	private List<Request> requestsMade;
+	
+	@OneToMany(mappedBy="loaner", cascade=CascadeType.ALL)
+	private List<Request> requestsReceived;
 
 	public User() {}
 	
@@ -148,5 +154,21 @@ public class User implements UserDetails {
 
 	public void setTools(List<Tool> tools) {
 		this.tools = tools;
+	}
+
+	public List<Request> getRequestsMade() {
+		return requestsMade;
+	}
+
+	public void setRequestsMade(List<Request> requestsMade) {
+		this.requestsMade = requestsMade;
+	}
+
+	public List<Request> getRequestsReceived() {
+		return requestsReceived;
+	}
+
+	public void setRequestsReceived(List<Request> requestsReceived) {
+		this.requestsReceived = requestsReceived;
 	}
 }

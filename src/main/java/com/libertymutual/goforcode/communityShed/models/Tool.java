@@ -4,12 +4,14 @@ import java.net.URL;
 import java.sql.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -57,6 +59,9 @@ public class Tool {
 	
 	@ManyToOne
 	private User owner;
+	
+	@OneToMany(mappedBy="tool", cascade=CascadeType.ALL)
+	private List<Request> requests;
 
 	public Tool() {}
 
@@ -172,6 +177,14 @@ public class Tool {
 
 	public void setOwner(User owner) {
 		this.owner = owner;
+	}
+
+	public List<Request> getRequests() {
+		return requests;
+	}
+
+	public void setRequests(List<Request> requests) {
+		this.requests = requests;
 	}
 
 }
