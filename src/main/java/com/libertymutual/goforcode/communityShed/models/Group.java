@@ -35,6 +35,8 @@ public class Group {
 	@Column(nullable = false, length = 80)
 	private String groupDescription;
 	
+	@ManyToMany()
+	private List<User> users;
 	
 	public Group() {}
 	
@@ -43,12 +45,20 @@ public class Group {
 		this.groupDescription = groupDescription;
 	}
 
+	
 	public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public void addUserToGroup(User user) {
+		if (users == null) {
+			users = new ArrayList<User>();
+		}
+		 users.add(user);
 	}
 
 	public String getGroupName() {
@@ -66,13 +76,6 @@ public class Group {
 	public void setGroupDescription(String groupDescription) {
 		this.groupDescription = groupDescription;
 	}
-
-	
-	@OneToMany(mappedBy = "group")
-	private List<Tool> tools;
-	
-	@ManyToMany()
-	private List<User> users;
 	
 	public List<User> getUsers() {
 		return users;
@@ -87,20 +90,5 @@ public class Group {
 			users = new ArrayList<User>();
 		}
 		users.add(user);
-	}
-
-	public List<Tool> getTools() {
-		return tools;
-	}
-
-	public void setTools(List<Tool> tools) {
-		this.tools = tools;
-	}
-	
-	public void addTool (Tool tool) {
-		if (tools == null) {
-			tools = new ArrayList<Tool>();
-		}
-		tools.add(tool);
 	}
 }

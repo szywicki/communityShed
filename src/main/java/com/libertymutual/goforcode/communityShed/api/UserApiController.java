@@ -56,13 +56,4 @@ public class UserApiController {
 		User user = userRepo.findOne(userId);
 		return user.getTools();
 	}
-	
-//	@ApiOperation("Deletes user from selected group.")
-//	@DeleteMapping("{userId}/groups")
-//	public void deleteOne(@PathVariable long id) {
-//		User user = userRepo.findOne(id);
-//		List<Group> userGroup = userRepo.findById(id);
-//		userRepo.delete(user);
-//		
-//	}
 }

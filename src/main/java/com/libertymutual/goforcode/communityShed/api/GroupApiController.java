@@ -1,7 +1,10 @@
 package com.libertymutual.goforcode.communityShed.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,9 +27,10 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api/groups")
-@CrossOrigin(origins = "*")
+
 
 public class GroupApiController {
+	
 	private GroupRepo groupRepo;
 	private UserRepo userRepo;
 	private ToolRepo toolRepo;
@@ -45,10 +49,11 @@ public class GroupApiController {
 	
 	@ApiOperation("Create a Group")
 	@PostMapping("")
-	public Group createGroup(@RequestBody Group group) {	
-	group = groupRepo.save(group);
-	return group;
-	
+	public Group createGroup(@RequestBody Group group, Authentication auth ) {
+		User currentUser = (User) auth.getPrincipal();
+		group.addUserToGroup(currentUser);	
+		group = groupRepo.save(group);
+		return group;
 	}
 		
 	
@@ -56,7 +61,6 @@ public class GroupApiController {
 	@GetMapping("{groupId}/users")
 	public List<User> getUsers(@PathVariable long groupId) {
 		Group group = groupRepo.findOne(groupId);
-
 		return group.getUsers();
 	}
 	
@@ -65,20 +69,23 @@ public class GroupApiController {
 	@GetMapping("{groupId}/tools")
 	public List<Tool> getTools(@PathVariable long groupId) {
 		Group group = groupRepo.findOne(groupId);
-
-		return group.getTools();
+		List<Tool> tools = new ArrayList<Tool>();
+        for (User user : group.getUsers()) {
+            tools.addAll(user.getTools());
+        }
+        return tools;
 	}
 	
-	@ApiOperation("Add a tool to the group")
-	@PostMapping("{groupId}/tools")
-	public Group addAnTool(@PathVariable long groupId, @RequestBody Tool tool) {
-		Group group = groupRepo.findOne(groupId);
-		tool = toolRepo.findOne(tool.getId());
-		group.addTool(tool);
-		groupRepo.save(group);
-		
-		return group;
-	}
 
-	
+	@ApiOperation("Deletes user from selected group.")
+	@DeleteMapping("{userId}/groups")
+	public User deleteOne(@PathVariable long id) {
+		try {
+		User user = userRepo.findOne(id);
+		groupRepo.delete(id);
+		return user; 
+	} catch (EmptyResultDataAccessException erdae) {
+		return null;
+	}
+}
 }
