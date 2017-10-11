@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import com.libertymutual.goforcode.communityShed.models.Request;
 
-
 @Repository
 public interface RequestRepo extends JpaRepository<Request, Long>{
 

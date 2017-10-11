@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -49,14 +50,18 @@ public class User implements UserDetails {
 	
 	@ManyToMany(fetch=FetchType.EAGER, mappedBy="users", cascade=CascadeType.ALL)
 	private List<Group> groups;
+	
+	@OneToMany(mappedBy="owner", cascade=CascadeType.ALL)
+	private List<Tool> tools;
 
 	public User() {}
 	
-	public User(String password, String email, String firstName, String lastName) {
+	public User(String password, String email, String firstName, String lastName, List<Tool> tools) {
 		this.password = password;
 		this.email = email;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.tools = tools;
 	}
 	
 	public Long getId() {
@@ -135,5 +140,13 @@ public class User implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	public List<Tool> getTools() {
+		return tools;
+	}
+
+	public void setTools(List<Tool> tools) {
+		this.tools = tools;
 	}
 }

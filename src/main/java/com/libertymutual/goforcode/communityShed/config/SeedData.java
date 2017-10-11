@@ -25,13 +25,13 @@ public class SeedData {
 		this.encoder = encoder;
 		
 		Group group = new Group ("fourties", "The Fourties Group");
-			Tool tool = new Tool("123456789012345678901234567890", "12345678901234567890123456789012345678901234567890123456789012345678901234567890", "123456789012345678901234567890", "123456789012345678901234567890", null, null, "123456789012345678901234567890", 1, null);
+			Tool tool = new Tool("123456789012345678901234567890", "12345678901234567890123456789012345678901234567890123456789012345678901234567890", "123456789012345678901234567890", "123456789012345678901234567890", null, null, "123456789012345678901234567890", 1, null,"1234567890");
 			group.addTool(tool);
 			groupRepo.save(group);
 			
 		groupRepo.save(new Group ("fifties", "The fifties Group"));
 		
-			toolRepo.save(new Tool("Lantern", "Eveready Readyflex Floating Lantern", "Safety & Security", "Eveready", null, null, "Available", 4, null));
+			toolRepo.save(new Tool("Lantern", "Eveready Readyflex Floating Lantern", "Safety & Security", "Eveready", null, null, "Available", 4, null,"User"));
 			toolRepo.save(new Tool("Flashlight", "Coast HP7 Focusing LED Flashlight", "Safety & Security", "Coast", null, null, "Available", 4, null));
 
 			User user = new User(encoder.encode("user"), "user@domain.com", "User", "U");

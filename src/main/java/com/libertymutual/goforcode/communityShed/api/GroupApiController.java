@@ -19,6 +19,8 @@ import com.libertymutual.goforcode.communityShed.repositories.GroupRepo;
 import com.libertymutual.goforcode.communityShed.repositories.ToolRepo;
 import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
 
+import io.swagger.annotations.ApiOperation;
+
 
 @RestController
 @RequestMapping("/api/groups")
@@ -33,20 +35,15 @@ public class GroupApiController {
 		this.groupRepo = groupRepo;
 	}
 		
-//	@GetMapping("")
-//	public List<Group> getAll() {
-//		return groupRepo.findAll();
-//	}
 	
-	
-	// Get one Group by Id
+	@ApiOperation("Get one Group by Id")
 	@GetMapping("{id}")
 	public Group getOneGroup(@PathVariable long id) {
 		return groupRepo.findOne(id); 
 	}	
 
 	
-	// Create a Group
+	@ApiOperation("Create a Group")
 	@PostMapping("")
 	public Group createGroup(@RequestBody Group group) {	
 	group = groupRepo.save(group);
@@ -55,28 +52,31 @@ public class GroupApiController {
 	}
 		
 	
-	// Get all Users Of this Group
-
-
-	@PostMapping("{groupId}/users")
-	public Group addAnUser(@PathVariable long groupId, @RequestBody User user) {
+	@ApiOperation("Get list of users in that group")
+	@GetMapping("{groupId}/users")
+	public List<User> getUsers(@PathVariable long groupId) {
 		Group group = groupRepo.findOne(groupId);
-		user = userRepo.findOne(user.getId());
 
-		group.addUser(user);
-		groupRepo.save(group);
-
-		return group;
+		return group.getUsers();
 	}
 	
+	
+	@ApiOperation("Get list of tools owned by that group")
+	@GetMapping("{groupId}/tools")
+	public List<Tool> getTools(@PathVariable long groupId) {
+		Group group = groupRepo.findOne(groupId);
+
+		return group.getTools();
+	}
+	
+	@ApiOperation("Add a tool to the group")
 	@PostMapping("{groupId}/tools")
 	public Group addAnTool(@PathVariable long groupId, @RequestBody Tool tool) {
 		Group group = groupRepo.findOne(groupId);
 		tool = toolRepo.findOne(tool.getId());
-
 		group.addTool(tool);
 		groupRepo.save(group);
-
+		
 		return group;
 	}
 

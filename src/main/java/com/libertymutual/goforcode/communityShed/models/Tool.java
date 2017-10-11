@@ -54,10 +54,13 @@ public class Tool {
 	
 	@Column(nullable = true)
 	private URL image;
+	
+	@ManyToOne
+	private User owner;
 
 	public Tool() {}
 
-	public Tool(String toolName, String toolDescription, String category, String manufacturer, Date dateCheckout, Date dateReturn, String status, int toolAge, URL image) {
+	public Tool(String toolName, String toolDescription, String category, String manufacturer, Date dateCheckout, Date dateReturn, String status, int toolAge, URL image, User owner) {
 		
 		this.toolName = toolName;
 		this.toolDescription = toolDescription;
@@ -68,6 +71,7 @@ public class Tool {
 		this.status = status;
 		this.toolAge = toolAge;
 		this.image = image;
+		this.owner = owner; 
 
 	}
 
@@ -160,6 +164,14 @@ public class Tool {
 
 	public void setGroup(Group group) {
 		this.group = group;
+	}
+
+	public User getOwner() {
+		return owner;
+	}
+
+	public void setOwner(User owner) {
+		this.owner = owner;
 	}
 
 }

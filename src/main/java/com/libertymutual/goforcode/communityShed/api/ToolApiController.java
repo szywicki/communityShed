@@ -14,7 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.libertymutual.goforcode.communityShed.models.Group;
 import com.libertymutual.goforcode.communityShed.models.Tool;
+import com.libertymutual.goforcode.communityShed.models.User;
+import com.libertymutual.goforcode.communityShed.repositories.GroupRepo;
 import com.libertymutual.goforcode.communityShed.repositories.ToolRepo;
+import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
+
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api/tools")
@@ -22,13 +27,15 @@ import com.libertymutual.goforcode.communityShed.repositories.ToolRepo;
 
 public class ToolApiController {
 	private ToolRepo toolRepo;
+	private UserRepo userRepo;
+	private GroupRepo groupRepo;
 
 	public ToolApiController(ToolRepo toolRepo) {
 		this.toolRepo = toolRepo;
 
 	}
 
-	// Get all Tools (of all users in all groups)
+	@ApiOperation("Get all Tools of all users in all groups")
 	@GetMapping("")
 	public List<Tool> getAllTools(String brand, String toolName) {
 
@@ -42,14 +49,14 @@ public class ToolApiController {
 
 	}
 
-	// Get one Tool by Id
+	@ApiOperation("Get one Tool by Id")
 	@GetMapping("{id}")
 	public Tool getOneTool(@PathVariable long id) {
 
 		return toolRepo.findOne(id);
 	}
 
-	// Create a Tool
+	@ApiOperation("Create a Tool")
 	@PostMapping("")
 	public Tool createTool(@RequestBody Tool tool) {
 
@@ -58,7 +65,7 @@ public class ToolApiController {
 		return tool;
 	}
 
-	// Update a Tool
+	@ApiOperation("Update a Tool")
 	@PutMapping("{id}")
 	public Tool updateTool(@RequestBody Tool tool, @PathVariable long id) {
 
@@ -68,7 +75,7 @@ public class ToolApiController {
 
 	}
 
-	// Delete a Tool
+	@ApiOperation("Delete a Tool")
 	@DeleteMapping("{id}")
 	public Tool deleteTool(@PathVariable long id) {
 		System.out.println("Deleted id:" + id);
@@ -80,9 +87,19 @@ public class ToolApiController {
 
 	}
 
-	// Get tools of all Users of a Group
+	@ApiOperation("Get list of tools of all Users of a Group")
+	@GetMapping("{groupId}/tools")
+	public List<Tool> getTools(@PathVariable long groupId) {
+		List<Tool> tools = null;
+		
+		Group group = groupRepo.findOne(groupId);
 
-	// Get all Users of all Groups Tools
+		for (User user : group.getUsers()) {
+			tools.addAll(user.getTools());
+		}
+		
+		return tools;
+	}
 
 	// Get Tool Detail
 
