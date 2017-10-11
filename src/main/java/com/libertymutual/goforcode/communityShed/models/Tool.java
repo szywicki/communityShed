@@ -15,6 +15,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -61,6 +64,7 @@ public class Tool {
 	private User owner;
 	
 	@OneToMany(mappedBy="tool", cascade=CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Request> requests;
 
 	public Tool() {}

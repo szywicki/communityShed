@@ -1,8 +1,6 @@
 package com.libertymutual.goforcode.communityShed.models;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -16,15 +14,15 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PathVariable;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import net.minidev.json.annotate.JsonIgnore;
 
 @JsonIdentityInfo(
 		generator = ObjectIdGenerators.PropertyGenerator.class, 
@@ -43,7 +41,7 @@ public class User implements UserDetails {
 	
 	@Column(length=75, nullable=false)
 	private String firstName;
-	
+		
 	@Column(length=75, nullable=false)
 	private String lastName;
 	
@@ -58,14 +56,17 @@ public class User implements UserDetails {
 	private List<Group> groups;
 	
 	@JsonIgnore
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany(mappedBy="owner", cascade=CascadeType.ALL)
 	private List<Tool> tools;
 	
 	@JsonIgnore
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany(mappedBy="borrower", cascade=CascadeType.ALL)
 	private List<Request> requestsMade;
 	
 	@JsonIgnore
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany(mappedBy="loaner", cascade=CascadeType.ALL)
 	private List<Request> requestsReceived;
 
