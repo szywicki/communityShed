@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import net.minidev.json.annotate.JsonIgnore;
+
 @JsonIdentityInfo(
 		generator = ObjectIdGenerators.PropertyGenerator.class, 
 		property = "id"
@@ -51,15 +53,19 @@ public class User implements UserDetails {
 	@Column(length=255, nullable=false)
 	private String password;
 	
+	@JsonIgnore
 	@ManyToMany(fetch=FetchType.EAGER, mappedBy="users", cascade=CascadeType.ALL)
 	private List<Group> groups;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy="owner", cascade=CascadeType.ALL)
 	private List<Tool> tools;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy="borrower", cascade=CascadeType.ALL)
 	private List<Request> requestsMade;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy="loaner", cascade=CascadeType.ALL)
 	private List<Request> requestsReceived;
 
