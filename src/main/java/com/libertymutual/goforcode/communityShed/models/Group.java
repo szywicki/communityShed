@@ -1,5 +1,6 @@
 package com.libertymutual.goforcode.communityShed.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -10,11 +11,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
@@ -32,8 +35,6 @@ public class Group {
 	@Column(nullable = false, length = 80)
 	private String groupDescription;
 	
-	@ManyToMany()
-	private List<User> users;
 	
 	public Group() {}
 	
@@ -66,11 +67,40 @@ public class Group {
 		this.groupDescription = groupDescription;
 	}
 
+	
+	@OneToMany(mappedBy = "group")
+	private List<Tool> tools;
+	
+	@ManyToMany()
+	private List<User> users;
+	
 	public List<User> getUsers() {
 		return users;
 	}
 
 	public void setUsers(List<User> users) {
 		this.users = users;
+	}
+	
+	public void addUser (User user) {
+		if (users == null) {
+			users = new ArrayList<User>();
+		}
+		users.add(user);
+	}
+
+	public List<Tool> getTools() {
+		return tools;
+	}
+
+	public void setTools(List<Tool> tools) {
+		this.tools = tools;
+	}
+	
+	public void addTool (Tool tool) {
+		if (tools == null) {
+			tools = new ArrayList<Tool>();
+		}
+		tools.add(tool);
 	}
 }

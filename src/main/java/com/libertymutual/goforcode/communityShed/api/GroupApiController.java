@@ -16,21 +16,28 @@ import com.libertymutual.goforcode.communityShed.models.Group;
 import com.libertymutual.goforcode.communityShed.models.Tool;
 import com.libertymutual.goforcode.communityShed.models.User;
 import com.libertymutual.goforcode.communityShed.repositories.GroupRepo;
+import com.libertymutual.goforcode.communityShed.repositories.ToolRepo;
 import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
 
 
 @RestController
-@RequestMapping("/groups")
+@RequestMapping("/api/groups")
 @CrossOrigin(origins = "*")
 
 public class GroupApiController {
 	private GroupRepo groupRepo;
 	private UserRepo userRepo;
+	private ToolRepo toolRepo;
 	
 	public GroupApiController (GroupRepo groupRepo) {
 		this.groupRepo = groupRepo;
 	}
 		
+//	@GetMapping("")
+//	public List<Group> getAll() {
+//		return groupRepo.findAll();
+//	}
+	
 	
 	// Get one Group by Id
 	@GetMapping("{id}")
@@ -38,6 +45,7 @@ public class GroupApiController {
 		return groupRepo.findOne(id); 
 	}	
 
+	
 	// Create a Group
 	@PostMapping("")
 	public Group createGroup(@RequestBody Group group) {	
@@ -47,15 +55,30 @@ public class GroupApiController {
 	}
 		
 	
-	// Get all Groups of a User
-//	public List<Group> getAllUserGroups(@PathVariable long id, String userName) {
-//			User user = userRepo.findOne(id);
-//			
-////			groupList = user.
-////					userRepo.findAll(user)
-////					groupRepo.findAll();
-////			return groupList;
+	// Get all Users Of this Group
 
+
+	@PostMapping("{groupId}/users")
+	public Group addAnUser(@PathVariable long groupId, @RequestBody User user) {
+		Group group = groupRepo.findOne(groupId);
+		user = userRepo.findOne(user.getId());
+
+		group.addUser(user);
+		groupRepo.save(group);
+
+		return group;
+	}
+	
+	@PostMapping("{groupId}/tools")
+	public Group addAnTool(@PathVariable long groupId, @RequestBody Tool tool) {
+		Group group = groupRepo.findOne(groupId);
+		tool = toolRepo.findOne(tool.getId());
+
+		group.addTool(tool);
+		groupRepo.save(group);
+
+		return group;
+	}
 
 	
 }
