@@ -21,7 +21,7 @@ import com.libertymutual.goforcode.communityShed.models.User;
 import com.libertymutual.goforcode.communityShed.services.ShedUserDetailsService;
 
 @RestController
-@RequestMapping("/api/session")
+@RequestMapping("/api/sessions")
 @CrossOrigin(origins = "*")
 public class SessionApiController {
 	
