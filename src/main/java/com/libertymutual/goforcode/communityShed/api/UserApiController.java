@@ -1,5 +1,6 @@
 package com.libertymutual.goforcode.communityShed.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -51,9 +52,25 @@ public class UserApiController {
 	}
 	
 	@ApiOperation("Gets list of tools that user owns.")
-	@GetMapping("{userId}/tools")
+	@GetMapping("{userId}/tools/mine")
 	public List<Tool> getTools(@PathVariable long userId) {
 		User user = userRepo.findOne(userId);
 		return user.getTools();
+	}
+	
+	@ApiOperation("Gets list of all tools for all users in all groups which user is a member of")
+    @GetMapping("{userId}/tools")
+    public List<Tool> getUserGroupTools(@PathVariable long userId) {
+        System.out.println("Full List UserId: " + userId);
+        List<Tool> tools = new ArrayList<Tool>();
+        User user = userRepo.findOne(userId);
+        for (Group group : user.getGroups()) {
+            System.out.println("Full List UserId group: " + group);
+              for (User user1 : group.getUsers()) {
+                  System.out.println("Full List UserId group User: " + user1);
+                  tools.addAll(user1.getTools());
+              }
+        }
+        return tools;
 	}
 }
