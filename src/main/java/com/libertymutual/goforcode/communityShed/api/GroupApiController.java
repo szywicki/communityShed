@@ -80,5 +80,15 @@ public class GroupApiController {
 		return group;
 	}
 
+	@ApiOperation("Add a User to the group")
+	@PostMapping("{groupId}/users")
+	public Group addAnUser(@PathVariable long groupId, @RequestBody User user) {
+		Group group = groupRepo.findOne(groupId);
+		user = userRepo.findOne(user.getId());
+		group.addUser(user);
+		groupRepo.save(group);
+		
+		return group;
+	}
 	
 }
