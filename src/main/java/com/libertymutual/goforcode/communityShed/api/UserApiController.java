@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.libertymutual.goforcode.communityShed.models.User;
+import com.libertymutual.goforcode.communityShed.repositories.ConfirmedUserRepo;
 import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
 import com.libertymutual.goforcode.communityShed.services.ShedUserDetailsService;
 
@@ -23,11 +24,13 @@ public class UserApiController {
 	private ShedUserDetailsService userDetails;
 	private PasswordEncoder encoder;
 	private UserRepo userRepo;
+	private ConfirmedUserRepo confirmedUserRepo;
 
-	public UserApiController(PasswordEncoder encoder, UserRepo userRepo, ShedUserDetailsService userDetails) {
+	public UserApiController(PasswordEncoder encoder, UserRepo userRepo, ConfirmedUserRepo confirmedUserRepo, ShedUserDetailsService userDetails) {
 		this.encoder = encoder;
 		this.userRepo = userRepo;
 		this.userDetails = userDetails;
+		this.confirmedUserRepo = confirmedUserRepo;
 
 	}
 

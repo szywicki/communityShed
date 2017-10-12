@@ -62,15 +62,15 @@ public class Tool {
 	private URL image;
 	
 	@ManyToOne
-	private User owner;
+	private ConfirmedUser owner;
 	
 	@OneToMany(mappedBy="tool", cascade=CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Request> requests;
 
 	public Tool() {}
-	
-	public Tool(String toolName, String toolDescription, String category, String manufacturer, Date dateCheckout, Date dateReturn, String status, int toolAge, URL image, User owner) {
+
+	public Tool(String toolName, String toolDescription, String category, String manufacturer, Date dateCheckout, Date dateReturn, String status, int toolAge, URL image, ConfirmedUser owner) {
 		
 		this.toolName = toolName;
 		this.toolDescription = toolDescription;
@@ -165,11 +165,22 @@ public class Tool {
 		this.manufacturer = manufacturer;
 	}
 
-	public User getOwner() {
+	@ManyToOne()
+	private Group group;
+
+	public Group getGroup() {
+		return group;
+	}
+
+	public void setGroup(Group group) {
+		this.group = group;
+	}
+
+	public ConfirmedUser getOwner() {
 		return owner;
 	}
 
-	public void setOwner(User owner) {
+	public void setOwner(ConfirmedUser owner) {
 		this.owner = owner;
 	}
 

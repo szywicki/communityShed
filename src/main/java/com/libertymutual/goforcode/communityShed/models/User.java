@@ -1,6 +1,5 @@
 package com.libertymutual.goforcode.communityShed.models;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -11,72 +10,45 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import net.minidev.json.annotate.JsonIgnore;
 
-@JsonIdentityInfo(
-		generator = ObjectIdGenerators.PropertyGenerator.class, 
-		property = "id"
-)
 
 @Entity
-@Table(name="communityshed_user")
-public class User implements UserDetails {
+@Table(name="shedder")
+public abstract class User implements UserDetails {
 	
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
-	@Column(length=75, nullable=false)
-	private String firstName;
+
 		
-	@Column(length=75, nullable=false)
-	private String lastName;
-	
 	@Column(unique=true, length=255, nullable=false)
 	private String email;
-	
-	@Column(length=255, nullable=false)
-	private String password;
-	
+		
 	@JsonIgnore
 	@ManyToMany(fetch=FetchType.EAGER, mappedBy="users", cascade=CascadeType.ALL)
 	private List<Group> groups;
 	
-	@JsonIgnore
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(mappedBy="owner", cascade=CascadeType.ALL)
-	private List<Tool> tools;
 	
-	@JsonIgnore
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(mappedBy="borrower", cascade=CascadeType.ALL)
-	private List<Request> requestsMade;
-	
-	@JsonIgnore
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(mappedBy="loaner", cascade=CascadeType.ALL)
-	private List<Request> requestsReceived;
-
 	public User() {}
 	
-	public User(String password, String email, String firstName, String lastName) {
-		this.password = password;
+	public User(String email) {
 		this.email = email;
-		this.firstName = firstName;
-		this.lastName = lastName;
+	}
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 	public void addGroup(Group group) {
@@ -87,29 +59,7 @@ public class User implements UserDetails {
 //		group.removeUserFromGroup(this);
 	}
 	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+	public abstract List<Tool> getTools();
 
 	public String getEmail() {
 		return email;
@@ -119,13 +69,6 @@ public class User implements UserDetails {
 		this.email = email;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
 
 	public List<Group> getGroups() {
 		return groups;
@@ -134,76 +77,4 @@ public class User implements UserDetails {
 	public void setGroups(List<Group> groups) {
 		this.groups = groups;
 	}
-
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return AuthorityUtils.commaSeparatedStringToAuthorityList("USER");
-	}
-
-	@Override
-	public String getUsername() {
-		return getEmail();
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
-
-	public List<Tool> getTools() {
-		return tools;
-	}
-
-	public void setTools(List<Tool> tools) {
-		this.tools = tools;
-	}
-
-	public List<Request> getRequestsMade() {
-		return requestsMade;
-	}
-
-	public void setRequestsMade(List<Request> requestsMade) {
-		this.requestsMade = requestsMade;
-	}
-
-	public List<Request> getRequestsReceived() {
-		return requestsReceived;
-	}
-
-	public void setRequestsReceived(List<Request> requestsReceived) {
-		this.requestsReceived = requestsReceived;
-	}
-	
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof User) {
-			User u = (User) o;
-			return u.getId() == id;
-		}
-		return false;
-	}
-	
-	@Override
-	public int hashCode() {
-		if (id == null) {
-			return 0;
-		}
-		return id.hashCode();
-	}
-	
 }

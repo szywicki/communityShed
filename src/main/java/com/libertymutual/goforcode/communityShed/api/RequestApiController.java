@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.libertymutual.goforcode.communityShed.models.ConfirmedUser;
 import com.libertymutual.goforcode.communityShed.models.Request;
 import com.libertymutual.goforcode.communityShed.models.Tool;
 import com.libertymutual.goforcode.communityShed.models.User;
