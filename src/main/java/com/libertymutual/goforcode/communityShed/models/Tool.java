@@ -45,6 +45,7 @@ public class Tool {
 	@Column(nullable = true, length = 30)
 	private String manufacturer;
 
+	//Checkout and return are really attributes of request.  Should we store dataAvailable here and populate it with the next date the item is available for checkout?
 	@Column(nullable = true)
 	private Date dateCheckout;
 	
@@ -61,7 +62,7 @@ public class Tool {
 	private URL image;
 	
 	@ManyToOne
-	private User owner;
+	private ConfirmedUser owner;
 	
 	@OneToMany(mappedBy="tool", cascade=CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
@@ -69,7 +70,7 @@ public class Tool {
 
 	public Tool() {}
 
-	public Tool(String toolName, String toolDescription, String category, String manufacturer, Date dateCheckout, Date dateReturn, String status, int toolAge, URL image, User owner) {
+	public Tool(String toolName, String toolDescription, String category, String manufacturer, Date dateCheckout, Date dateReturn, String status, int toolAge, URL image, ConfirmedUser owner) {
 		
 		this.toolName = toolName;
 		this.toolDescription = toolDescription;
@@ -175,11 +176,11 @@ public class Tool {
 		this.group = group;
 	}
 
-	public User getOwner() {
+	public ConfirmedUser getOwner() {
 		return owner;
 	}
 
-	public void setOwner(User owner) {
+	public void setOwner(ConfirmedUser owner) {
 		this.owner = owner;
 	}
 
@@ -189,6 +190,17 @@ public class Tool {
 
 	public void setRequests(List<Request> requests) {
 		this.requests = requests;
+	}
+	
+	public void copyFromSimpleTool(SimpleTool simple)	{
+		this.toolName = simple.getToolName();
+		this.toolDescription = simple.getToolDescription();
+		this.category = simple.getCategory();
+		this.manufacturer = simple.getManufacturer();
+		this.dateCheckout = simple.getDateCheckout();
+		this.dateReturn = simple.getDateReturn();
+		this.toolAge = simple.getToolAge();
+		this.image = simple.getImage();
 	}
 
 }

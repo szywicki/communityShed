@@ -1,9 +1,10 @@
 package com.libertymutual.goforcode.communityShed.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,74 +14,99 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.libertymutual.goforcode.communityShed.models.Group;
+import com.libertymutual.goforcode.communityShed.models.Request;
+import com.libertymutual.goforcode.communityShed.models.SimpleTool;
 import com.libertymutual.goforcode.communityShed.models.Tool;
 import com.libertymutual.goforcode.communityShed.models.User;
-import com.libertymutual.goforcode.communityShed.repositories.GroupRepo;
+import com.libertymutual.goforcode.communityShed.repositories.RequestRepo;
 import com.libertymutual.goforcode.communityShed.repositories.ToolRepo;
-import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
+import com.libertymutual.goforcode.communityShed.repositories.ConfirmedUserRepo;
 
 import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api/tools")
 @CrossOrigin(origins = "*")
-
 public class ToolApiController {
+
 	private ToolRepo toolRepo;
-
-	public ToolApiController(ToolRepo toolRepo) {
+	private RequestRepo requestRepo;
+	
+	public ToolApiController(ToolRepo toolRepo, RequestRepo requestRepo) {
 		this.toolRepo = toolRepo;
-
+		this.requestRepo = requestRepo;
 	}
 
-	@ApiOperation("Get all Tools of all users in all groups")
+	@ApiOperation("Get all Tools of all users for all groups that the current user is in")
 	@GetMapping("")
-	public List<Tool> getAllTools(String brand, String toolName) {
-
-		List<Tool> returnList;
-		if (toolName != null) {
-			returnList = toolRepo.findByToolNameContainingAllIgnoreCase(toolName);
-		} else {
-			returnList = toolRepo.findAll();
+	public List<Tool> getAllTools(Authentication auth) {
+		List<Tool> tools = new ArrayList<Tool>();
+		User authUser = (User) auth.getPrincipal();
+		for (Group group : authUser.getGroups()) {
+			for (User user : group.getUsers()) {
+				tools.addAll(user.getTools());
+			}
 		}
-		return returnList;
+		return tools;
+	}
 
+	@ApiOperation("Get all tools that are owned by the current user")
+	@GetMapping("mine")
+	public List<Tool> getMyTools(Authentication auth) {
+		User authUser = (User) auth.getPrincipal();
+		return authUser.getTools();
 	}
 
 	@ApiOperation("Get one Tool by Id")
 	@GetMapping("{id}")
 	public Tool getOneTool(@PathVariable long id) {
-
 		return toolRepo.findOne(id);
 	}
 
 	@ApiOperation("Create a Tool")
 	@PostMapping("")
-	public Tool createTool(@RequestBody Tool tool) {
-
+	public Tool createTool(Authentication auth, @RequestBody SimpleTool simple) {
+		Tool tool = new Tool();
+		tool.copyFromSimpleTool(simple);
+		tool.setOwner((User) auth.getPrincipal());
+		tool.setStatus("Available");
 		tool = toolRepo.save(tool);
-
 		return tool;
 	}
 
 	@ApiOperation("Update a Tool")
 	@PutMapping("{id}")
-	public Tool updateTool(@RequestBody Tool tool, @PathVariable long id) {
-
-		tool.setId(id);
-
+	public Tool updateTool(@RequestBody SimpleTool simple, @PathVariable long id) {
+		Tool tool = toolRepo.findOne(id);
+		tool.copyFromSimpleTool(simple);
 		return toolRepo.save(tool);
-
 	}
 
-	@ApiOperation("Delete a Tool")
-	@DeleteMapping("{id}")
-	public Tool deleteTool(@PathVariable long id) {
-		System.out.println("Deleted id:" + id);
+	@ApiOperation("Disable a Tool")
+	@PutMapping("{id}/disable")
+	public Tool disableTool(@PathVariable long id) {
+		// disable tool and deny all pending requests
 		Tool tool = toolRepo.findOne(id);
-		toolRepo.delete(id);
+		tool.setStatus("Disabled");
+		List<Request> requests = tool.getRequests();
+		for (Request request : requests)	{
+			if(request.getStatus().equals("Pending")) {
+				request.setStatus("Denied");
+			}
+		}
+		requestRepo.save(requests);
+		toolRepo.save(tool);
 		return tool;
-
+	}
+	
+	@ApiOperation("Enable a Tool")
+	@PutMapping("{id}/enable")
+	public Tool enableTool(@PathVariable long id)	{
+		// enable tool
+		Tool tool = toolRepo.findOne(id);
+		tool.setStatus("Available");
+		toolRepo.save(tool);
+		return tool;
 	}
 
 }

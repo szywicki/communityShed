@@ -38,14 +38,14 @@ public class Request {
 	private Tool tool;
 	
 	@ManyToOne
-	private User borrower;
+	private ConfirmedUser borrower;
 	
 	@ManyToOne
-	private User loaner;
+	private ConfirmedUser loaner;
 	
 	public Request() {}
 	
-	public Request(Date loanStartDate, Date loanEndDate, String description, String status, Tool tool, User borrower, User loaner) {
+	public Request(Date loanStartDate, Date loanEndDate, String description, String status, Tool tool, ConfirmedUser borrower, ConfirmedUser loaner) {
 		this.loanStartDate = loanStartDate;
 		this.loanEndDate = loanEndDate;
 		this.description = description;
@@ -107,7 +107,7 @@ public class Request {
 		return borrower;
 	}
 
-	public void setBorrower(User borrower) {
+	public void setBorrower(ConfirmedUser borrower) {
 		this.borrower = borrower;
 	}
 
@@ -115,7 +115,7 @@ public class Request {
 		return loaner;
 	}
 
-	public void setLoaner(User loaner) {
+	public void setLoaner(ConfirmedUser loaner) {
 		this.loaner = loaner;
 	}
 	
