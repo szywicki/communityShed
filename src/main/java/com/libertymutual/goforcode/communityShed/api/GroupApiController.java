@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +17,6 @@ import com.libertymutual.goforcode.communityShed.models.Group;
 import com.libertymutual.goforcode.communityShed.models.Tool;
 import com.libertymutual.goforcode.communityShed.models.User;
 import com.libertymutual.goforcode.communityShed.repositories.GroupRepo;
-import com.libertymutual.goforcode.communityShed.repositories.ToolRepo;
 import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
 
 import io.swagger.annotations.ApiOperation;
@@ -33,15 +30,15 @@ public class GroupApiController {
 	
 	private GroupRepo groupRepo;
 	private UserRepo userRepo;
-	private ToolRepo toolRepo;
 	
-	public GroupApiController (GroupRepo groupRepo) {
+	public GroupApiController (GroupRepo groupRepo, UserRepo userRepo) {
 		this.groupRepo = groupRepo;
+		this.userRepo = userRepo;
 	}
 		
 	
 	@ApiOperation("Get one Group by Id")
-	@GetMapping("{id}")
+	@GetMapping("{groupId}")
 	public Group getOneGroup(@PathVariable long id) {
 		return groupRepo.findOne(id); 
 	}	
@@ -77,8 +74,38 @@ public class GroupApiController {
 	}
 	
 
+	@ApiOperation("Adds user to selected group.")
+	@PutMapping("{groupId}/users/{userId}/add")
+	public User addUserToGroup(@PathVariable long groupId, @PathVariable long userId) {
+		User user = userRepo.findOne(userId);
+		for (Group groupIn : user.getGroups()) {
+			if (groupId == groupIn.getId()) {
+//			User userInGroup = userRepo.findOne(userId);
+			return user;
+			}
+		}
+		try {
+				
+				Group group = groupRepo.findOne(groupId);
+				group.addUserToGroup(user);
+				groupRepo.save(group);
+			return user;
+		} catch (EmptyResultDataAccessException erdae) {
+			return null;
+		}
+		
+	}
+	
+	@ApiOperation("Gets list of groups that user is a member of.")
+	@GetMapping("{userId}/groups")
+	public List<Group> getGroups(@PathVariable long userId) {
+		User user = userRepo.findOne(userId);
+		return user.getGroups();
+	}
+	
+	
 	@ApiOperation("Deletes user from selected group.")
-	@PutMapping("{groupId}/users/{userId}")
+	@PutMapping("{groupId}/users/{userId}/delete")
 	public User deleteOne(@PathVariable long groupId, @PathVariable long userId) {
 		try {
 			User user = userRepo.findOne(userId);
