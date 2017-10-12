@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.libertymutual.goforcode.communityShed.models.ConfirmedUser;
 import com.libertymutual.goforcode.communityShed.models.User;
 import com.libertymutual.goforcode.communityShed.repositories.ConfirmedUserRepo;
 import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
@@ -36,13 +37,13 @@ public class UserApiController {
 
 	@ApiOperation("creates a user")
 	@PostMapping("")
-	public User signUp(@RequestBody User user) {
-		User existingUser = userRepo.findByEmail(user.getEmail());
+	public ConfirmedUser signUp(@RequestBody ConfirmedUser user) {
+		ConfirmedUser existingUser = confirmedUserRepo.findByEmail(user.getEmail());
 		if (existingUser != null) {
 			return null;
 		}
 		user.setPassword(encoder.encode(user.getPassword()));
-		user = userRepo.save(user);
+		user = confirmedUserRepo.save(user);
 		UserDetails details = userDetails.loadUserByUsername(user.getEmail());
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(details, user.getPassword(), details.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(token);

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.libertymutual.goforcode.communityShed.models.ConfirmedUser;
 import com.libertymutual.goforcode.communityShed.models.Group;
 import com.libertymutual.goforcode.communityShed.models.Tool;
 import com.libertymutual.goforcode.communityShed.models.User;
@@ -97,9 +98,9 @@ public class GroupApiController {
 	}
 	
 	@ApiOperation("Gets list of groups that user is a member of.")
-	@GetMapping("{userId}/groups")
-	public List<Group> getGroups(@PathVariable long userId) {
-		User user = userRepo.findOne(userId);
+	@GetMapping("")
+	public List<Group> getGroups(Authentication auth) {
+		ConfirmedUser user = (ConfirmedUser) auth.getPrincipal();
 		return user.getGroups();
 	}
 	

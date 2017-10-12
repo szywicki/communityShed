@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.libertymutual.goforcode.communityShed.models.ConfirmedUser;
 import com.libertymutual.goforcode.communityShed.models.User;
+import com.libertymutual.goforcode.communityShed.repositories.ConfirmedUserRepo;
 import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
 import com.libertymutual.goforcode.communityShed.services.ShedUserDetailsService;
 
@@ -27,15 +29,16 @@ import com.libertymutual.goforcode.communityShed.services.ShedUserDetailsService
 
 public class SessionApiController {
 	
-	private UserRepo userRepo;
+	private ConfirmedUserRepo confirmedUserRepo;
 	
 	private ShedUserDetailsService userDetails;
 	private AuthenticationManager authManager;
 		
-	public SessionApiController(ShedUserDetailsService userDetails, AuthenticationManager authManager, UserRepo userRepo)	{
+	public SessionApiController(ShedUserDetailsService userDetails, AuthenticationManager authManager, ConfirmedUserRepo confirmedUserRepo)	{
 		this.userDetails = userDetails;
 		this.authManager = authManager;
-		this.userRepo = userRepo;
+		this.confirmedUserRepo = confirmedUserRepo;
+		
 	}
 	
 	@PutMapping("/mine")
@@ -47,12 +50,7 @@ public class SessionApiController {
 			authManager.authenticate(token);
 			if (token.isAuthenticated()) {
 	            SecurityContextHolder.getContext().setAuthentication(token);
-	    		User  userExists = userRepo.findByEmail(credentials.getEmail());
-	            if ( userExists != null) {       	
-	               return userExists;
-	           } else {
-	            	return null;
-	            }          
+	    		return confirmedUserRepo.findByEmail(credentials.getEmail());
 	        }
 			return null;
 	}

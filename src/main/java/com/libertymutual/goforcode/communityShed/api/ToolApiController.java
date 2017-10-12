@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.libertymutual.goforcode.communityShed.models.ConfirmedUser;
 import com.libertymutual.goforcode.communityShed.models.Group;
 import com.libertymutual.goforcode.communityShed.models.Request;
 import com.libertymutual.goforcode.communityShed.models.SimpleTool;
@@ -41,7 +42,7 @@ public class ToolApiController {
 	@GetMapping("")
 	public List<Tool> getAllTools(Authentication auth) {
 		List<Tool> tools = new ArrayList<Tool>();
-		User authUser = (User) auth.getPrincipal();
+		ConfirmedUser authUser = (ConfirmedUser) auth.getPrincipal();
 		for (Group group : authUser.getGroups()) {
 			for (User user : group.getUsers()) {
 				tools.addAll(user.getTools());
@@ -68,7 +69,7 @@ public class ToolApiController {
 	public Tool createTool(Authentication auth, @RequestBody SimpleTool simple) {
 		Tool tool = new Tool();
 		tool.copyFromSimpleTool(simple);
-		tool.setOwner((User) auth.getPrincipal());
+		tool.setOwner((ConfirmedUser) auth.getPrincipal());
 		tool.setStatus("Available");
 		tool = toolRepo.save(tool);
 		return tool;
