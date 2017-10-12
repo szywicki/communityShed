@@ -17,7 +17,7 @@ import com.libertymutual.goforcode.communityShed.models.Tool;
 import com.libertymutual.goforcode.communityShed.models.User;
 import com.libertymutual.goforcode.communityShed.repositories.GroupRepo;
 import com.libertymutual.goforcode.communityShed.repositories.ToolRepo;
-import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
+import com.libertymutual.goforcode.communityShed.repositories.ConfirmedUserRepo;
 
 import io.swagger.annotations.ApiOperation;
 
