@@ -15,7 +15,9 @@ import javax.persistence.Table;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
-import net.minidev.json.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 
 
 @Entity
