@@ -1,7 +1,5 @@
 package com.libertymutual.goforcode.communityShed.api;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.security.core.Authentication;
@@ -34,10 +32,10 @@ public class RequestApiController {
 	}
 	
 	@ApiOperation("creates a new request.  Date is expected in yyyy-mm-dd format.")
-	@PostMapping("/tool/{id}")
-	public Request create(Authentication auth, @RequestBody Request request, @PathVariable long id)	{
+	@PostMapping("/tool/{toolId}")
+	public Request create(Authentication auth, @RequestBody Request request, @PathVariable long toolId)	{
 		User borrower = (User) auth.getPrincipal();
-		Tool tool = toolRepo.findOne(id);
+		Tool tool = toolRepo.findOne(toolId);
 		//we should consider not storing the status on a tool and just having a method to determine whether the tool is available or not (based on requests)
 		tool.setStatus("Requested");
 		//setting startdate to current date/time right now.  We should refactor and have it set to the first available time for the requested tool.

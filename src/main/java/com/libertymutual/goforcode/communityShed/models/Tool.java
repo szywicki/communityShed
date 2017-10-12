@@ -45,6 +45,7 @@ public class Tool {
 	@Column(nullable = true, length = 30)
 	private String manufacturer;
 
+	//Checkout and return are really attributes of request.  Should we store dataAvailable here and populate it with the next date the item is available for checkout?
 	@Column(nullable = true)
 	private Date dateCheckout;
 	
@@ -68,7 +69,7 @@ public class Tool {
 	private List<Request> requests;
 
 	public Tool() {}
-
+	
 	public Tool(String toolName, String toolDescription, String category, String manufacturer, Date dateCheckout, Date dateReturn, String status, int toolAge, URL image, User owner) {
 		
 		this.toolName = toolName;
@@ -164,17 +165,6 @@ public class Tool {
 		this.manufacturer = manufacturer;
 	}
 
-	@ManyToOne()
-	private Group group;
-
-	public Group getGroup() {
-		return group;
-	}
-
-	public void setGroup(Group group) {
-		this.group = group;
-	}
-
 	public User getOwner() {
 		return owner;
 	}
@@ -189,6 +179,17 @@ public class Tool {
 
 	public void setRequests(List<Request> requests) {
 		this.requests = requests;
+	}
+	
+	public void copyFromSimpleTool(SimpleTool simple)	{
+		this.toolName = simple.getToolName();
+		this.toolDescription = simple.getToolDescription();
+		this.category = simple.getCategory();
+		this.manufacturer = simple.getManufacturer();
+		this.dateCheckout = simple.getDateCheckout();
+		this.dateReturn = simple.getDateReturn();
+		this.toolAge = simple.getToolAge();
+		this.image = simple.getImage();
 	}
 
 }
