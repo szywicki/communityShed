@@ -18,8 +18,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
-
-
 @Entity
 @Table(name="shedder")
 public abstract class User implements UserDetails {

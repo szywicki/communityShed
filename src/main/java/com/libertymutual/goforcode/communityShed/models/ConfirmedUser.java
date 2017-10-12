@@ -19,9 +19,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
-import net.minidev.json.annotate.JsonIgnore;
 
 @JsonIdentityInfo(
 		generator = ObjectIdGenerators.PropertyGenerator.class, 
