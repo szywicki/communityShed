@@ -59,7 +59,7 @@ public abstract class User implements UserDetails {
 //		group.removeUserFromGroup(this);
 	}
 	
-	
+	public abstract List<Tool> getTools();
 
 	public String getEmail() {
 		return email;

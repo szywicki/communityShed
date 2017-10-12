@@ -2,6 +2,7 @@ package com.libertymutual.goforcode.communityShed.models;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -68,6 +69,11 @@ public class InvitedUser extends User{
 	@Override
 	public boolean isEnabled() {
 		return false;
+	}
+
+	@Override
+	public List<Tool> getTools() {
+		return new ArrayList<Tool>();
 	}
 	
 }

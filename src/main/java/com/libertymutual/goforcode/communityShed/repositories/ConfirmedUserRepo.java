@@ -14,7 +14,4 @@ public interface ConfirmedUserRepo extends JpaRepository<User, Long> {
 		
 	public User findByEmail(String email);
 	
-//	List <Tool> findById(Long Id);
-	
-//	List<Group> findById(Long Id);
 }
