@@ -32,11 +32,12 @@ public class SeedData {
 		Group group1 = new Group ("eighties", "The Eighties Group");
 		Group group2 = new Group ("sixties", "The Sixties Group");
 		
-		User user1 = new User(encoder.encode("test"), "user@domain.com", "User", "Domain");
+		ConfirmedUser user1 = new ConfirmedUser(encoder.encode("test"), "user@domain.com", "User", "Domain");
 		userRepo.save(user1);
 		ConfirmedUser user2 = new ConfirmedUser(encoder.encode("test"), "bob@ross.com", "Bob", "Ross");
 		userRepo.save(user2);
-		User user3 = new User(encoder.encode("test"), "lonely@user.com", "Lonely", "User");
+		
+		ConfirmedUser user3 = new ConfirmedUser(encoder.encode("test"), "lonely@user.com", "Lonely", "User");
 		userRepo.save(user3);
 		
 		group1.addUserToGroup(user1);
