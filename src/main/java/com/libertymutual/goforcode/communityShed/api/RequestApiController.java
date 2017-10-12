@@ -17,6 +17,9 @@ import com.libertymutual.goforcode.communityShed.models.Tool;
 import com.libertymutual.goforcode.communityShed.models.User;
 import com.libertymutual.goforcode.communityShed.repositories.RequestRepo;
 import com.libertymutual.goforcode.communityShed.repositories.ToolRepo;
+import com.libertymutual.goforcode.communityShed.services.MailGunEmailService;
+import com.mashape.unirest.http.exceptions.UnirestException;
+
 import io.swagger.annotations.ApiOperation;
 
 @RestController
@@ -26,6 +29,7 @@ public class RequestApiController {
 	
 	private RequestRepo requestRepo;
 	private ToolRepo toolRepo;
+	
 	
 	public RequestApiController(RequestRepo requestRepo, ToolRepo toolRepo)	{
 		this.requestRepo = requestRepo;
@@ -47,9 +51,14 @@ public class RequestApiController {
 		request.setTool(tool);
 		request.setBorrower(borrower);
 		request.setLoaner(tool.getOwner());
-		System.out.println(request.toString());
 		toolRepo.save(tool);
 		requestRepo.save(request);
+		try {
+			MailGunEmailService.sendSimpleMessage();
+		} catch (UnirestException e) {
+			System.out.println("mailgun fail");
+			e.printStackTrace();
+		}
 		return request;
 	}
 	
