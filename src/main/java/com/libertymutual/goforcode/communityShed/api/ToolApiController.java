@@ -32,10 +32,13 @@ public class ToolApiController {
 
 	private ToolRepo toolRepo;
 	private RequestRepo requestRepo;
+	private ConfirmedUserRepo confirmedUserRepo;
 	
-	public ToolApiController(ToolRepo toolRepo, RequestRepo requestRepo) {
+	public ToolApiController(ToolRepo toolRepo, RequestRepo requestRepo, ConfirmedUserRepo confirmedUserRepo) {
 		this.toolRepo = toolRepo;
 		this.requestRepo = requestRepo;
+		this.confirmedUserRepo = confirmedUserRepo;
+		
 	}
 
 	@ApiOperation("Get all Tools of all users for all groups that the current user is in")
@@ -43,6 +46,7 @@ public class ToolApiController {
 	public List<Tool> getAllTools(Authentication auth) {
 		List<Tool> tools = new ArrayList<Tool>();
 		ConfirmedUser authUser = (ConfirmedUser) auth.getPrincipal();
+		authUser = (ConfirmedUser) confirmedUserRepo.findOne(authUser.getId());
 		for (Group group : authUser.getGroups()) {
 			for (User user : group.getUsers()) {
 				tools.addAll(user.getTools());
@@ -54,7 +58,8 @@ public class ToolApiController {
 	@ApiOperation("Get all tools that are owned by the current user")
 	@GetMapping("mine")
 	public List<Tool> getMyTools(Authentication auth) {
-		User authUser = (User) auth.getPrincipal();
+		ConfirmedUser authUser = (ConfirmedUser) auth.getPrincipal();
+		authUser = (ConfirmedUser) confirmedUserRepo.findOne(authUser.getId());
 		return authUser.getTools();
 	}
 
