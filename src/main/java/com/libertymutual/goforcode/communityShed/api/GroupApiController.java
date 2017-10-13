@@ -17,6 +17,7 @@ import com.libertymutual.goforcode.communityShed.models.ConfirmedUser;
 import com.libertymutual.goforcode.communityShed.models.Group;
 import com.libertymutual.goforcode.communityShed.models.Tool;
 import com.libertymutual.goforcode.communityShed.models.User;
+import com.libertymutual.goforcode.communityShed.repositories.ConfirmedUserRepo;
 import com.libertymutual.goforcode.communityShed.repositories.GroupRepo;
 import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
 
@@ -31,10 +32,12 @@ public class GroupApiController {
 	
 	private GroupRepo groupRepo;
 	private UserRepo userRepo;
+	private ConfirmedUserRepo confirmedUserRepo;
 	
-	public GroupApiController (GroupRepo groupRepo, UserRepo userRepo) {
+	public GroupApiController (GroupRepo groupRepo, UserRepo userRepo, ConfirmedUserRepo confirmedUserRepo) {
 		this.groupRepo = groupRepo;
 		this.userRepo = userRepo;
+		this.confirmedUserRepo = confirmedUserRepo;
 	}
 		
 	
@@ -101,6 +104,7 @@ public class GroupApiController {
 	@GetMapping("")
 	public List<Group> getGroups(Authentication auth) {
 		ConfirmedUser user = (ConfirmedUser) auth.getPrincipal();
+		user = (ConfirmedUser) confirmedUserRepo.findOne(user.getId());
 		return user.getGroups();
 	}
 	
