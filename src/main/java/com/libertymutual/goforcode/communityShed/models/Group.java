@@ -38,6 +38,9 @@ public class Group {
 	@ManyToMany(fetch=FetchType.EAGER)
 	private List<User> users;
 	
+	@ManyToMany(fetch=FetchType.EAGER)
+	private List<User> pendingUsers;
+	
 	public Group() {}
 	
 	public Group (String groupName, String groupDescription) {

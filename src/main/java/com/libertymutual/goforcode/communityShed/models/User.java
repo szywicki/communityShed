@@ -36,6 +36,10 @@ public abstract class User implements UserDetails {
 	@ManyToMany(fetch=FetchType.EAGER, mappedBy="users", cascade=CascadeType.ALL)
 	private List<Group> groups;
 	
+	@JsonIgnore
+	@ManyToMany(fetch=FetchType.EAGER, mappedBy="pendingUsers", cascade=CascadeType.ALL)
+	private List<Group> pendingGroups;
+	
 	
 	public User() {}
 	
