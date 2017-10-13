@@ -24,14 +24,12 @@ public class InviteApiController {
 		this.userRepo = userRepo;
 	}
 	
-	@ApiOperation("Generate invite for a group")
-	@PostMapping("group/{groupId}")
-	public User	inviteUser(@RequestBody User user, @PathVariable long groupId)	{
-		User existingUser = userRepo.findByEmail(user.getEmail());
-		if(null != existingUser)	{
-			
-		}
+//	@ApiOperation("Generate invite for a group")
+//	@PostMapping("group/{groupId}")
+//	public User	inviteUser(@RequestBody User user, @PathVariable long groupId)	{
+//		User existingUser = userRepo.findByEmail(user.getEmail());
+//		if(null != existingUser)	{
+//			
+//		}
 		
-	}
-
 }
