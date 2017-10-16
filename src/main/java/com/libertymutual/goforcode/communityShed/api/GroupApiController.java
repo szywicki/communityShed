@@ -84,6 +84,8 @@ public class GroupApiController {
 		Group group = groupRepo.findOne(groupId);
 		group.removePendingUserFromGroup(user);
 		group.addUserToGroup(user);
+		groupRepo.save(group);
+		user.addGroup(group);
 		user = (ConfirmedUser) confirmedUserRepo.findOne(user.getId());
 		return user.getGroups();
 	}
@@ -94,6 +96,7 @@ public class GroupApiController {
 		ConfirmedUser user = (ConfirmedUser) auth.getPrincipal();
 		Group group = groupRepo.findOne(groupId);
 		group.removePendingUserFromGroup(user);
+		groupRepo.save(group);
 		user = (ConfirmedUser) confirmedUserRepo.findOne(user.getId());
 		return user.getGroups();
 	}
@@ -110,28 +113,6 @@ public class GroupApiController {
         return tools;
 	}
 	
-
-	@ApiOperation("Adds user to selected group.")
-	@PutMapping("{groupId}/users/{userId}/add")
-	public User addUserToGroup(@PathVariable long groupId, @PathVariable long userId) {
-		User user = userRepo.findOne(userId);
-		for (Group groupIn : user.getGroups()) {
-			if (groupId == groupIn.getId()) {
-//			User userInGroup = userRepo.findOne(userId);
-			return user;
-			}
-		}
-		try {
-				
-				Group group = groupRepo.findOne(groupId);
-				group.addUserToGroup(user);
-				groupRepo.save(group);
-			return user;
-		} catch (EmptyResultDataAccessException erdae) {
-			return null;
-		}
-		
-	}
 	
 	@ApiOperation("Gets list of groups that user is a member of.")
 	@GetMapping("")
@@ -141,18 +122,4 @@ public class GroupApiController {
 		return user.getGroups();
 	}
 	
-	
-	@ApiOperation("Deletes user from selected group.")
-	@PutMapping("{groupId}/users/{userId}/delete")
-	public User deleteOne(@PathVariable long groupId, @PathVariable long userId) {
-		try {
-			User user = userRepo.findOne(userId);
-			Group group = groupRepo.findOne(userId);
-			group.removeUserFromGroup(user);
-			groupRepo.save(group);
-			return user;
-		} catch (EmptyResultDataAccessException erdae) {
-			return null;
-		}
-	}
 }
