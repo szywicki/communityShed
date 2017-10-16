@@ -12,14 +12,14 @@ public class MailGunEmailService {
 	@Value("${MAIL_GUN_API_KEY}")
 	private static String key;
 	
-	public static JsonNode sendSimpleMessage() throws UnirestException {
+	public static JsonNode sendSimpleMessage(String recipient, String subject, String html) throws UnirestException {
 
-        HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/" + "communityshed.online.com" + "/messages")
-                        .basicAuth("api", key)
-                    .queryString("from", "Excited User <USER@YOURDOMAIN.COM>")
+        HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/" + "sandbox94dc8b9546d34223b40efef2175b22bf.mailgun.org" + "/messages")
+                    .basicAuth("api", key)
+                    .queryString("from", "CommunityShed <admin@communityshed.online>")
                     .queryString("to", "brandvig@gmail.com")
-                    .queryString("subject", "hello")
-                    .queryString("text", "testing")
+                    .queryString("subject", subject)
+                    .queryString("html", html)
                     .asJson();
 
            return request.getBody();

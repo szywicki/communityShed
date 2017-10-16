@@ -7,11 +7,6 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import org.springframework.security.core.GrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -74,6 +69,12 @@ public class InvitedUser extends User{
 	@Override
 	public List<Tool> getTools() {
 		return new ArrayList<Tool>();
+	}
+
+	@Override
+	public void inviteToGroup(Group group) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

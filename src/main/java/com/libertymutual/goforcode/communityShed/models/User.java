@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -80,5 +79,15 @@ public abstract class User implements UserDetails {
 
 	public void setGroups(List<Group> groups) {
 		this.groups = groups;
+	}
+	
+	public abstract void inviteToGroup(Group group);
+
+	public List<Group> getPendingGroups() {
+		return pendingGroups;
+	}
+
+	public void setPendingGroups(List<Group> pendingGroups) {
+		this.pendingGroups = pendingGroups;
 	}
 }

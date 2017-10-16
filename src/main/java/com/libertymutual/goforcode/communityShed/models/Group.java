@@ -91,4 +91,28 @@ public class Group {
 	public void setUsers(List<User> users) {
 		this.users = users;
 	}
+	
+	public void addPendingUserToGroup(User user) {
+		if (pendingUsers == null) {
+			pendingUsers = new ArrayList<User>();
+		}
+		 pendingUsers.add(user);
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Group) {
+			Group g = (Group) o;
+			return g.getId() == getId();
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		if (getId() == null) {
+			return 0;
+		}
+		return getId().hashCode();
+	}
 }

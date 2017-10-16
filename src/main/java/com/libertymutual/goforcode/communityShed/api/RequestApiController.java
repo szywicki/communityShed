@@ -53,12 +53,6 @@ public class RequestApiController {
 		request.setLoaner(tool.getOwner());
 		toolRepo.save(tool);
 		requestRepo.save(request);
-		try {
-			MailGunEmailService.sendSimpleMessage();
-		} catch (UnirestException e) {
-			System.out.println("mailgun fail");
-			e.printStackTrace();
-		}
 		return request;
 	}
 	

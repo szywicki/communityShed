@@ -21,6 +21,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.libertymutual.goforcode.communityShed.services.MailGunEmailService;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 @JsonIdentityInfo(
 		generator = ObjectIdGenerators.PropertyGenerator.class, 
@@ -156,6 +158,17 @@ public class ConfirmedUser extends User {
 			return 0;
 		}
 		return getId().hashCode();
+	}
+	
+	@Override
+	public void inviteToGroup(Group group)	{
+		String html = "<html>Here's the email message</html>";
+		try {
+			MailGunEmailService.sendSimpleMessage(super.getEmail(), "You've been invited to the CommunityShed group: " + group.getGroupName(), html);
+		} catch (UnirestException e) {
+			System.out.println("Invitation email failed");
+			e.printStackTrace();
+		}
 	}
 	
 }
