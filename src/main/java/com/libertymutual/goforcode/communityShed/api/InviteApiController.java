@@ -1,8 +1,6 @@
 package com.libertymutual.goforcode.communityShed.api;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,9 +8,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.libertymutual.goforcode.communityShed.models.ConfirmedUser;
 import com.libertymutual.goforcode.communityShed.models.Group;
+import com.libertymutual.goforcode.communityShed.models.InvitedUser;
 import com.libertymutual.goforcode.communityShed.models.User;
+import com.libertymutual.goforcode.communityShed.repositories.ConfirmedUserRepo;
 import com.libertymutual.goforcode.communityShed.repositories.GroupRepo;
+import com.libertymutual.goforcode.communityShed.repositories.InvitedUserRepo;
 import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
 
 import io.swagger.annotations.ApiOperation;
@@ -25,23 +27,44 @@ public class InviteApiController {
 	
 	private UserRepo userRepo;
 	private GroupRepo groupRepo;
+	private ConfirmedUserRepo confirmedUserRepo;
+	private InvitedUserRepo invitedUserRepo;
 	
-	public InviteApiController(UserRepo userRepo, GroupRepo groupRepo) {
+	public InviteApiController(UserRepo userRepo, GroupRepo groupRepo, ConfirmedUserRepo confirmedUserRepo, InvitedUserRepo invitedUserRepo) {
 		this.userRepo = userRepo;
 		this.groupRepo = groupRepo;
+		this.confirmedUserRepo = confirmedUserRepo;
+		this.invitedUserRepo = invitedUserRepo;
+		
 	}
 	
 	@ApiOperation("Generate invite for a group")
 	@PostMapping("group/{groupId}")
-	public void	inviteUser(@RequestBody inviteEmail inviteEmail, @PathVariable long groupId)	{
+	public void	inviteUser(Authentication auth, @RequestBody inviteEmail inviteEmail, @PathVariable long groupId)	{
+		//get session user
+		ConfirmedUser authUser = (ConfirmedUser) auth.getPrincipal();
+		authUser = (ConfirmedUser) confirmedUserRepo.findOne(authUser.getId());
+		//get invited user by submitted email address
 		User existingUser = userRepo.findByEmail(inviteEmail.getEmail());
 		Group group = groupRepo.findOne(groupId);
-		if(null != existingUser && !existingUser.getGroups().contains(group) && !existingUser.getPendingGroups().contains(group))	{
-			group.addPendingUserToGroup(existingUser);
-			groupRepo.save(group);
-			existingUser.inviteToGroup(group);
-		} else	{
-			//do stuff for non-user
+		
+		//verify that session user is a member of group they are inviting a user to
+		if (authUser.getGroups().contains(group)) {
+			//invite a new user
+			if (null == existingUser) {
+				InvitedUser invited = new InvitedUser();
+				invited.setEmail(inviteEmail.getEmail());
+				group.addPendingUserToGroup(invited);
+				invitedUserRepo.save(invited);
+				groupRepo.save(group);
+				invited.inviteToGroup(group);
+			} 
+			//invite an existing user if they aren't already in the group or invited to the group
+			else if (!existingUser.getGroups().contains(group) && !existingUser.getPendingGroups().contains(group)) {
+				group.addPendingUserToGroup(existingUser);
+				groupRepo.save(group);
+				existingUser.inviteToGroup(group);
+			} 
 		}
 	}
 	

@@ -14,12 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.libertymutual.goforcode.communityShed.models.ConfirmedUser;
 import com.libertymutual.goforcode.communityShed.models.Request;
 import com.libertymutual.goforcode.communityShed.models.Tool;
-import com.libertymutual.goforcode.communityShed.models.User;
 import com.libertymutual.goforcode.communityShed.repositories.RequestRepo;
 import com.libertymutual.goforcode.communityShed.repositories.ToolRepo;
-import com.libertymutual.goforcode.communityShed.services.MailGunEmailService;
-import com.mashape.unirest.http.exceptions.UnirestException;
-
 import io.swagger.annotations.ApiOperation;
 
 @RestController

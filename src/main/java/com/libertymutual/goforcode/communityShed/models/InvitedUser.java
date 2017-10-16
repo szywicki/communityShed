@@ -11,6 +11,8 @@ import org.springframework.security.core.GrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.libertymutual.goforcode.communityShed.services.MailGunEmailService;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 @JsonIdentityInfo(
 		generator = ObjectIdGenerators.PropertyGenerator.class, 
@@ -19,17 +21,12 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Entity
 public class InvitedUser extends User{
 
-	private String password;
+	private static final long serialVersionUID = 1L;
 
 	@Column(unique=true)
-	private UUID invitationKey;
+	private UUID invitationKey = UUID.randomUUID();
 	
 	public InvitedUser() {}
-	
-	public InvitedUser(String password, String invitationKey) {
-		this.password = password;
-		this.invitationKey = UUID.randomUUID();
-	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -48,22 +45,22 @@ public class InvitedUser extends User{
 
 	@Override
 	public boolean isAccountNonExpired() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -71,9 +68,23 @@ public class InvitedUser extends User{
 		return new ArrayList<Tool>();
 	}
 
+	public UUID getInvitationKey() {
+		return invitationKey;
+	}
+
+	public void setInvitationKey(UUID invitationKey) {
+		this.invitationKey = invitationKey;
+	}
+	
 	@Override
 	public void inviteToGroup(Group group) {
-		// TODO Auto-generated method stub
+		String html = "<html>Here's the invite email message for a new user</html>";
+		try {
+			MailGunEmailService.sendSimpleMessage(super.getEmail(), "You've been invited to the CommunityShed group: " + group.getGroupName(), html);
+		} catch (UnirestException e) {
+			System.out.println("Invitation email failed");
+			e.printStackTrace();
+		}
 		
 	}
 	

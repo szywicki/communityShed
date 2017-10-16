@@ -7,17 +7,10 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -31,6 +24,8 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 @Entity
 public class ConfirmedUser extends User {
 	
+	private static final long serialVersionUID = 1L;
+
 	@Column(length=75)
 	private String firstName;
 		
@@ -162,7 +157,7 @@ public class ConfirmedUser extends User {
 	
 	@Override
 	public void inviteToGroup(Group group)	{
-		String html = "<html>Here's the email message</html>";
+		String html = "<html>Here's the invite email message for an existing user</html>";
 		try {
 			MailGunEmailService.sendSimpleMessage(super.getEmail(), "You've been invited to the CommunityShed group: " + group.getGroupName(), html);
 		} catch (UnirestException e) {
