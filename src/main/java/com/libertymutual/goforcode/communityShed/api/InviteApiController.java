@@ -1,7 +1,10 @@
 package com.libertymutual.goforcode.communityShed.api;
 
+import java.util.UUID;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +42,12 @@ public class InviteApiController {
 		this.invitedUserRepo = invitedUserRepo;
 		this.emailer = emailer;
 		
+	}
+	
+	@ApiOperation("Return user details for an invite")
+	@GetMapping("{inviteKey}")
+	public InvitedUser getUserFromInvite(@PathVariable UUID inviteKey)	{
+		return invitedUserRepo.findByInvitationKey(inviteKey);
 	}
 	
 	@ApiOperation("Generate invite for a group")

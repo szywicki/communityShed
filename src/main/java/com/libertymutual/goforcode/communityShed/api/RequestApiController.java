@@ -54,24 +54,26 @@ public class RequestApiController {
 	
 	@ApiOperation("approve a request")
 	@PutMapping("{id}/approve")
-	public void approve(@PathVariable Long id)	{
+	public Request approve(@PathVariable Long id)	{
 		Request request = requestRepo.findOne(id);
 		Tool tool = request.getTool();
 		request.setStatus("Approved");
 		tool.setStatus("On Loan");
 		requestRepo.save(request);
 		toolRepo.save(tool);
+		return request;
 	}
 	
 	@ApiOperation("deny a request")
 	@PutMapping("{id}/deny")
-	public void deny(@PathVariable Long id)	{
+	public Request deny(@PathVariable Long id)	{
 		Request request = requestRepo.findOne(id);
 		Tool tool = request.getTool();
 		request.setStatus("Denied");
 		tool.setStatus("Available");
 		requestRepo.save(request);
 		toolRepo.save(tool);
+		return request;
 	}
 
 }
