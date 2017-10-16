@@ -97,6 +97,12 @@ public class Group {
 		 pendingUsers.add(user);
 	}
 	
+	public void removePendingUserFromGroup(User user) {
+		if (pendingUsers != null) {
+			pendingUsers.remove(user);
+		}
+	}
+	
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Group) {

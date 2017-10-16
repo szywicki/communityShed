@@ -19,6 +19,7 @@ import com.libertymutual.goforcode.communityShed.models.Tool;
 import com.libertymutual.goforcode.communityShed.models.User;
 import com.libertymutual.goforcode.communityShed.repositories.ConfirmedUserRepo;
 import com.libertymutual.goforcode.communityShed.repositories.GroupRepo;
+import com.libertymutual.goforcode.communityShed.repositories.InvitedUserRepo;
 import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
 
 import io.swagger.annotations.ApiOperation;
@@ -33,11 +34,13 @@ public class GroupApiController {
 	private GroupRepo groupRepo;
 	private UserRepo userRepo;
 	private ConfirmedUserRepo confirmedUserRepo;
+	private InvitedUserRepo invitedUserRepo;
 	
-	public GroupApiController (GroupRepo groupRepo, UserRepo userRepo, ConfirmedUserRepo confirmedUserRepo) {
+	public GroupApiController (GroupRepo groupRepo, UserRepo userRepo, ConfirmedUserRepo confirmedUserRepo, InvitedUserRepo invitedUserRepo) {
 		this.groupRepo = groupRepo;
 		this.userRepo = userRepo;
 		this.confirmedUserRepo = confirmedUserRepo;
+		this.invitedUserRepo = invitedUserRepo;
 	}
 		
 	
@@ -65,6 +68,39 @@ public class GroupApiController {
 		return group.getUsers();
 	}
 	
+	// Methods added for invitation handling. 
+	@ApiOperation("Gets list of pendingGroup invites for the logged in user.")
+	@GetMapping("pendingInvites")
+	public List<Group> getPendingGroups(Authentication auth) {
+		ConfirmedUser user = (ConfirmedUser) auth.getPrincipal();
+		user = (ConfirmedUser) confirmedUserRepo.findOne(user.getId());
+		return user.getPendingGroups();
+	}
+	
+	@ApiOperation("Remove the user from the pending invite table into the group member table.")
+	@PutMapping("{groupId}/user/accept")
+	public List<Group> acceptInvite(@PathVariable long groupId, Authentication auth) {
+		ConfirmedUser user = (ConfirmedUser) auth.getPrincipal();
+		Group group = groupRepo.findOne(groupId);
+		group.removePendingUserFromGroup(user);
+		group.addUserToGroup(user);
+		groupRepo.save(group);
+		user.addGroup(group);
+		user = (ConfirmedUser) confirmedUserRepo.findOne(user.getId());
+		return user.getGroups();
+	}
+	
+	@ApiOperation("remove the user from the pending relationship table.")
+	@PutMapping("{groupId}/user/deny")
+	public List<Group> denyInvite(@PathVariable long groupId, Authentication auth) {
+		ConfirmedUser user = (ConfirmedUser) auth.getPrincipal();
+		Group group = groupRepo.findOne(groupId);
+		group.removePendingUserFromGroup(user);
+		groupRepo.save(group);
+		user = (ConfirmedUser) confirmedUserRepo.findOne(user.getId());
+		return user.getGroups();
+	}
+	
 	
 	@ApiOperation("Get list of tools owned by that group")
 	@GetMapping("{groupId}/tools")
@@ -77,28 +113,6 @@ public class GroupApiController {
         return tools;
 	}
 	
-
-	@ApiOperation("Adds user to selected group.")
-	@PutMapping("{groupId}/users/{userId}/add")
-	public User addUserToGroup(@PathVariable long groupId, @PathVariable long userId) {
-		User user = userRepo.findOne(userId);
-		for (Group groupIn : user.getGroups()) {
-			if (groupId == groupIn.getId()) {
-//			User userInGroup = userRepo.findOne(userId);
-			return user;
-			}
-		}
-		try {
-				
-				Group group = groupRepo.findOne(groupId);
-				group.addUserToGroup(user);
-				groupRepo.save(group);
-			return user;
-		} catch (EmptyResultDataAccessException erdae) {
-			return null;
-		}
-		
-	}
 	
 	@ApiOperation("Gets list of groups that user is a member of.")
 	@GetMapping("")
@@ -108,18 +122,4 @@ public class GroupApiController {
 		return user.getGroups();
 	}
 	
-	
-	@ApiOperation("Deletes user from selected group.")
-	@PutMapping("{groupId}/users/{userId}/delete")
-	public User deleteOne(@PathVariable long groupId, @PathVariable long userId) {
-		try {
-			User user = userRepo.findOne(userId);
-			Group group = groupRepo.findOne(userId);
-			group.removeUserFromGroup(user);
-			groupRepo.save(group);
-			return user;
-		} catch (EmptyResultDataAccessException erdae) {
-			return null;
-		}
-	}
 }
