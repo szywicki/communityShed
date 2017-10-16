@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.libertymutual.goforcode.communityShed.services.MailGunEmailService;
 
 
 @Entity
@@ -81,7 +82,7 @@ public abstract class User implements UserDetails {
 		this.groups = groups;
 	}
 	
-	public abstract void inviteToGroup(Group group);
+	public abstract void inviteToGroup(Group group, MailGunEmailService emailer);
 
 	public List<Group> getPendingGroups() {
 		return pendingGroups;

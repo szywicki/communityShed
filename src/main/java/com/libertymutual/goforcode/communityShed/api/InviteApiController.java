@@ -16,6 +16,7 @@ import com.libertymutual.goforcode.communityShed.repositories.ConfirmedUserRepo;
 import com.libertymutual.goforcode.communityShed.repositories.GroupRepo;
 import com.libertymutual.goforcode.communityShed.repositories.InvitedUserRepo;
 import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
+import com.libertymutual.goforcode.communityShed.services.MailGunEmailService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -29,12 +30,14 @@ public class InviteApiController {
 	private GroupRepo groupRepo;
 	private ConfirmedUserRepo confirmedUserRepo;
 	private InvitedUserRepo invitedUserRepo;
+	private MailGunEmailService emailer;
 	
-	public InviteApiController(UserRepo userRepo, GroupRepo groupRepo, ConfirmedUserRepo confirmedUserRepo, InvitedUserRepo invitedUserRepo) {
+	public InviteApiController(UserRepo userRepo, GroupRepo groupRepo, ConfirmedUserRepo confirmedUserRepo, InvitedUserRepo invitedUserRepo, MailGunEmailService emailer) {
 		this.userRepo = userRepo;
 		this.groupRepo = groupRepo;
 		this.confirmedUserRepo = confirmedUserRepo;
 		this.invitedUserRepo = invitedUserRepo;
+		this.emailer = emailer;
 		
 	}
 	
@@ -57,13 +60,13 @@ public class InviteApiController {
 				group.addPendingUserToGroup(invited);
 				invitedUserRepo.save(invited);
 				groupRepo.save(group);
-				invited.inviteToGroup(group);
+				invited.inviteToGroup(group, emailer);
 			} 
 			//invite an existing user if they aren't already in the group or invited to the group
 			else if (!existingUser.getGroups().contains(group) && !existingUser.getPendingGroups().contains(group)) {
 				group.addPendingUserToGroup(existingUser);
 				groupRepo.save(group);
-				existingUser.inviteToGroup(group);
+				existingUser.inviteToGroup(group, emailer);
 			} 
 		}
 	}
