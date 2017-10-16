@@ -11,16 +11,14 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.security.core.GrantedAuthority;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.libertymutual.goforcode.communityShed.services.MailGunEmailService;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
-@JsonIdentityInfo(
-		generator = ObjectIdGenerators.PropertyGenerator.class, 
-		property = "id"
-)
+//@JsonIdentityInfo(
+//		generator = ObjectIdGenerators.PropertyGenerator.class, 
+//		property = "id"
+//)
 @Entity
 public class ConfirmedUser extends User {
 	
