@@ -2,7 +2,11 @@ package com.libertymutual.goforcode.communityShed.api;
 
 import java.util.UUID;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +24,7 @@ import com.libertymutual.goforcode.communityShed.repositories.GroupRepo;
 import com.libertymutual.goforcode.communityShed.repositories.InvitedUserRepo;
 import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
 import com.libertymutual.goforcode.communityShed.services.MailGunEmailService;
+import com.libertymutual.goforcode.communityShed.services.ShedUserDetailsService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -34,20 +39,42 @@ public class InviteApiController {
 	private ConfirmedUserRepo confirmedUserRepo;
 	private InvitedUserRepo invitedUserRepo;
 	private MailGunEmailService emailer;
+	private PasswordEncoder encoder;
+	private ShedUserDetailsService userDetails;
 	
-	public InviteApiController(UserRepo userRepo, GroupRepo groupRepo, ConfirmedUserRepo confirmedUserRepo, InvitedUserRepo invitedUserRepo, MailGunEmailService emailer) {
+	public InviteApiController(UserRepo userRepo, GroupRepo groupRepo, ConfirmedUserRepo confirmedUserRepo, InvitedUserRepo invitedUserRepo, MailGunEmailService emailer, PasswordEncoder encoder, ShedUserDetailsService userDetails) {
 		this.userRepo = userRepo;
 		this.groupRepo = groupRepo;
 		this.confirmedUserRepo = confirmedUserRepo;
 		this.invitedUserRepo = invitedUserRepo;
 		this.emailer = emailer;
-		
+		this.encoder = encoder;
+		this.userDetails = userDetails;
 	}
 	
 	@ApiOperation("Return user details for an invite")
 	@GetMapping("{inviteKey}")
 	public InvitedUser getUserFromInvite(@PathVariable UUID inviteKey)	{
 		return invitedUserRepo.findByInvitationKey(inviteKey);
+	}
+	
+	@ApiOperation("Convert InvitedUser into a ConfirmedUser")
+	@PostMapping("{inviteKey}")
+	public ConfirmedUser convertInvitedUserAndLogin(@RequestBody ConfirmedUser user, @PathVariable UUID inviteKey)	{
+		InvitedUser invited = invitedUserRepo.findByInvitationKey(inviteKey);
+		if (user.getEmail().equals(invited.getEmail()))	{
+			for (Group group : invited.getPendingGroups())	{
+				group.addUserToGroup(user);
+			}
+			user.setPassword(encoder.encode(user.getPassword()));
+			invitedUserRepo.delete(invited);
+			user = confirmedUserRepo.save(user);
+			UserDetails details = userDetails.loadUserByUsername(user.getEmail());
+			UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(details, user.getPassword(), details.getAuthorities());
+			SecurityContextHolder.getContext().setAuthentication(token);
+			return user;
+		}
+		return null;
 	}
 	
 	@ApiOperation("Generate invite for a group")

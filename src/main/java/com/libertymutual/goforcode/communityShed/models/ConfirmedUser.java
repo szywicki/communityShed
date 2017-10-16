@@ -15,10 +15,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.libertymutual.goforcode.communityShed.services.MailGunEmailService;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
-//@JsonIdentityInfo(
-//		generator = ObjectIdGenerators.PropertyGenerator.class, 
-//		property = "id"
-//)
 @Entity
 public class ConfirmedUser extends User {
 	
@@ -163,6 +159,8 @@ public class ConfirmedUser extends User {
 			e.printStackTrace();
 		}
 	}
+	
+	
 	
 }
 
