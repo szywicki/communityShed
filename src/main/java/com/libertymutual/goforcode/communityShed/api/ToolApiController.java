@@ -1,7 +1,5 @@
 package com.libertymutual.goforcode.communityShed.api;
 
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withUnauthorizedRequest;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
