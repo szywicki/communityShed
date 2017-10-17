@@ -91,4 +91,22 @@ public abstract class User implements UserDetails {
 	public void setPendingGroups(List<Group> pendingGroups) {
 		this.pendingGroups = pendingGroups;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof User) {
+			User u = (User) o;
+			return (getId() == null && u.getId() == null) || (getId().equals(u.getId()));
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		if (getId() == null) {
+			return super.hashCode();
+		}
+		return getId().hashCode();
+	}
+	
 }
