@@ -9,7 +9,6 @@ import org.springframework.hateoas.Resource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,14 +39,7 @@ public class S3Controller {
 								.withRel("url")))
 				.collect(Collectors.toList());
 	}
-
-    
-//    s3Client.putObject(new PutObjectRequest("your-bucket", "some-path/some-key.jpg", new File("somePath/someKey.jpg")).withCannedAcl(CannedAccessControlList.PublicRead))
-//    s3Client.getResourceUrl("your-bucket", "some-path/some-key.jpg");
-//    String ImageURL = String.valueOf(s3.getUrl(
-//            ConstantsAWS3.BUCKET_NAME, //The S3 Bucket To Upload To
-//            file.getName())); //The key for the uploaded object
-    
+ 
     
 	@RequestMapping(value = "upload", method = RequestMethod.POST)
 //	public @ResponseBody String handleFileUpload(@RequestParam("name") String name,
