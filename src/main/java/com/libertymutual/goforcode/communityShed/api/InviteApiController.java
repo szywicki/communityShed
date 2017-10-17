@@ -63,7 +63,7 @@ public class InviteApiController {
 	public ConfirmedUser convertInvitedUserAndLogin(@RequestBody ConfirmedUser user, @PathVariable UUID inviteKey)	{
 		InvitedUser invited = invitedUserRepo.findByInvitationKey(inviteKey);
 		if (user.getEmail().equals(invited.getEmail()))	{
-			//remove invited from groups and save -- cascade would be better but can't get it working
+			//remove invited from groups and save -- cascade on user delete would be better but can't get it working
 			for (Group group : invited.getPendingGroups())	{
 				group.removePendingUserFromGroup(invited);
 				groupRepo.save(group);
