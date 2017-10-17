@@ -1,6 +1,5 @@
 package com.libertymutual.goforcode.communityShed.models;
 
-import java.net.URL;
 import java.sql.Date;
 
 public class SimpleTool {
@@ -10,7 +9,7 @@ public class SimpleTool {
 	private String category;
 	private String manufacturer;
 	private int toolAge;
-	private URL image;
+	private String image;
 	private Date dateCheckout;
 	private Date dateReturn;
 	
@@ -45,10 +44,10 @@ public class SimpleTool {
 	public void setToolAge(int toolAge) {
 		this.toolAge = toolAge;
 	}
-	public URL getImage() {
+	public String getImage() {
 		return image;
 	}
-	public void setImage(URL image) {
+	public void setImage(String image) {
 		this.image = image;
 	}
 	public Date getDateCheckout() {

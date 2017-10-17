@@ -1,6 +1,5 @@
 package com.libertymutual.goforcode.communityShed.models;
 
-import java.net.URL;
 import java.sql.Date;
 import java.util.List;
 
@@ -59,7 +58,7 @@ public class Tool {
 	private int toolAge;
 	
 	@Column(nullable = true)
-	private URL image;
+	private String image;
 	
 	@ManyToOne
 	private ConfirmedUser owner;
@@ -70,7 +69,7 @@ public class Tool {
 
 	public Tool() {}
 
-	public Tool(String toolName, String toolDescription, String category, String manufacturer, Date dateCheckout, Date dateReturn, String status, int toolAge, URL image, ConfirmedUser owner) {
+	public Tool(String toolName, String toolDescription, String category, String manufacturer, Date dateCheckout, Date dateReturn, String status, int toolAge, String image, ConfirmedUser owner) {
 		
 		this.toolName = toolName;
 		this.toolDescription = toolDescription;
@@ -141,11 +140,11 @@ public class Tool {
 		this.status = status;
 	}
 
-	public URL getImage() {
+	public String getImage() {
 		return image;
 	}
 
-	public void setImage(URL image) {
+	public void setImage(String image) {
 		this.image = image;
 	}
 

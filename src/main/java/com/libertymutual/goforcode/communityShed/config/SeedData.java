@@ -52,7 +52,7 @@ public class SeedData {
 
 		groupRepo.save(group2);
 		
-		toolRepo.save(new Tool("123456789012345678901234567890", "12345678901234567890123456789012345678901234567890123456789012345678901234567890", "123456789012345678901234567890", "123456789012345678901234567890", null, null, "123456789012345678901234567890", 1, null, user1));
+//		toolRepo.save(new Tool("123456789012345678901234567890", "12345678901234567890123456789012345678901234567890123456789012345678901234567890", "123456789012345678901234567890", "123456789012345678901234567890", null, null, "123456789012345678901234567890", 1, null, user1));
 		//                    (String toolName, String toolDescription, String category, String manufacturer, Date dateCheckout, Date dateReturn, String status, int toolAge, URL image, ConfirmedUser owner)
 		toolRepo.save(new Tool("Lantern", "Eveready Readyflex Floating Lantern", "Safety & Security", "Eveready", null, null, "Available", 4, "https://s3-us-west-2.amazonaws.com/goforcode-oct2017-communityshade/Eveready+Readyflex+Floating+Lantern.jpg", user1));
 		toolRepo.save(new Tool("Flashlight", "Coast HP7 Focusing LED Flashlight", "Safety & Security", "Coast", null, null, "Available", 4, "https://s3-us-west-2.amazonaws.com/goforcode-oct2017-communityshade/Focusing+LED+Flashlight.jpg", user1));
