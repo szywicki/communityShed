@@ -1,7 +1,11 @@
 package com.libertymutual.goforcode.communityShed.api;
 
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withUnauthorizedRequest;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -43,17 +47,19 @@ public class ToolApiController {
 
 	@ApiOperation("Get all Tools of all users for all groups that the current user is in")
 	@GetMapping("")
-	public List<Tool> getAllTools(Authentication auth) {
-		List<Tool> tools = new ArrayList<Tool>();
+	public Collection<Tool> getAllTools(Authentication auth) {
 		ConfirmedUser authUser = (ConfirmedUser) auth.getPrincipal();
-		authUser = (ConfirmedUser) confirmedUserRepo.findOne(authUser.getId());
-		for (Group group : authUser.getGroups()) {
-			for (User user : group.getUsers()) {
-				tools.addAll(user.getTools());
-			}
-		}
-		return tools;
+		final ConfirmedUser realAuthUser = (ConfirmedUser) confirmedUserRepo.findOne(authUser.getId());
+		
+		return realAuthUser.getGroups()
+			.stream()
+			.flatMap(group -> group.getUsers().stream())
+			.flatMap(user -> user.getTools().stream())
+			.filter(tool -> !tool.getOwner().equals(realAuthUser))
+			.collect(Collectors.toMap(tool -> tool.getId(), tool -> tool))
+			.values();
 	}
+	
 
 	@ApiOperation("Get all tools that are owned by the current user")
 	@GetMapping("mine")

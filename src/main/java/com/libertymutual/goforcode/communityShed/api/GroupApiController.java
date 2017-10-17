@@ -86,7 +86,6 @@ public class GroupApiController {
 		group.addUserToGroup(user);
 		groupRepo.save(group);
 		user.addGroup(group);
-		user = (ConfirmedUser) confirmedUserRepo.findOne(user.getId());
 		return user.getGroups();
 	}
 	
