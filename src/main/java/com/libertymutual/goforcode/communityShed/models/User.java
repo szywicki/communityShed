@@ -56,6 +56,7 @@ public abstract class User implements UserDetails {
 	
 	public void addGroup(Group group) {
 		group.addUserToGroup(this);
+		groups.add(group);
 	}
 	
 	public void removeGroup (Group group) {
