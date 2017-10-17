@@ -63,12 +63,24 @@ public class InviteApiController {
 	public ConfirmedUser convertInvitedUserAndLogin(@RequestBody ConfirmedUser user, @PathVariable UUID inviteKey)	{
 		InvitedUser invited = invitedUserRepo.findByInvitationKey(inviteKey);
 		if (user.getEmail().equals(invited.getEmail()))	{
+			//remove invited from groups and save -- cascade would be better but can't get it working
+			for (Group group : invited.getPendingGroups())	{
+				group.removePendingUserFromGroup(invited);
+				groupRepo.save(group);
+			}
+			//delete invited now that it no longer is tied to any pendingGroups
+			invitedUserRepo.delete(invited);
+			
+			//save user now that the email address is available
+			user.setPassword(encoder.encode(user.getPassword()));
+			user = confirmedUserRepo.save(user);
+			//add user to groups and save
 			for (Group group : invited.getPendingGroups())	{
 				group.addUserToGroup(user);
+				groupRepo.save(group);
 			}
-			user.setPassword(encoder.encode(user.getPassword()));
-			invitedUserRepo.delete(invited);
-			user = confirmedUserRepo.save(user);
+			
+			//Authenticate user
 			UserDetails details = userDetails.loadUserByUsername(user.getEmail());
 			UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(details, user.getPassword(), details.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(token);
