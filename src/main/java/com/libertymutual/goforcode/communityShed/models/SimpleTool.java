@@ -9,9 +9,7 @@ public class SimpleTool {
 	private String category;
 	private String manufacturer;
 	private int toolAge;
-	private String image;
-	private Date dateCheckout;
-	private Date dateReturn;
+	
 	
 	
 	public String getToolName() {
@@ -43,24 +41,5 @@ public class SimpleTool {
 	}
 	public void setToolAge(int toolAge) {
 		this.toolAge = toolAge;
-	}
-	public String getImage() {
-		return image;
-	}
-	public void setImage(String image) {
-		this.image = image;
-	}
-	public Date getDateCheckout() {
-		return dateCheckout;
-	}
-	public void setDateCheckout(Date dateCheckout) {
-		this.dateCheckout = dateCheckout;
-	}
-	public Date getDateReturn() {
-		return dateReturn;
-	}
-	public void setDateReturn(Date dateReturn) {
-		this.dateReturn = dateReturn;
-	}
-
+}
 }
