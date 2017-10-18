@@ -41,7 +41,6 @@ public class SessionApiController {
 	
 	@PutMapping("/mine")
 	public User login(@RequestBody Credentials credentials)	{
-
 			UserDetails details = userDetails.loadUserByUsername(credentials.getEmail());
 			
 			UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(details, credentials.getPassword(), details.getAuthorities());
