@@ -118,4 +118,12 @@ public class Group {
 		}
 		return getId().hashCode();
 	}
+
+	public List<User> getPendingUsers() {
+		return pendingUsers;
+	}
+
+	public void setPendingUsers(List<User> pendingUsers) {
+		this.pendingUsers = pendingUsers;
+	}
 }
