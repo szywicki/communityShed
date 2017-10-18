@@ -196,10 +196,7 @@ public class Tool {
 		this.toolDescription = simple.getToolDescription();
 		this.category = simple.getCategory();
 		this.manufacturer = simple.getManufacturer();
-		this.dateCheckout = simple.getDateCheckout();
-		this.dateReturn = simple.getDateReturn();
 		this.toolAge = simple.getToolAge();
-		this.image = simple.getImage();
 	}
 
 }

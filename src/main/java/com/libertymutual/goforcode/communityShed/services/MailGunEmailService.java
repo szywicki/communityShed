@@ -18,6 +18,7 @@ public class MailGunEmailService {
 				.basicAuth("api", key)
 				.queryString("from", "CommunityShed Admin <admin@communityshed.online>")
 				.queryString("to", "brandvig@gmail.com")
+				.queryString("to", "erinleigh2000@gmail.com")
 				.queryString("subject", subject)
 				.queryString("html", html)
 				.asString();
