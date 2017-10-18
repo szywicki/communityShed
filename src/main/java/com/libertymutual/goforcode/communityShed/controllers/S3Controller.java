@@ -1,7 +1,9 @@
 package com.libertymutual.goforcode.communityShed.controllers;
 
 import com.amazonaws.services.s3.model.*;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.libertymutual.goforcode.communityShed.components.AmazonS3Template;
 import com.libertymutual.goforcode.communityShed.models.Tool;
 import com.libertymutual.goforcode.communityShed.repositories.ToolRepo;
@@ -26,11 +28,11 @@ public class S3Controller {
 	private AmazonS3Template amazonS3Template;
 	private String bucketName;
 	private ToolRepo toolRepo;
-	private Tool tool;
 
-	public S3Controller(AmazonS3Template amazonS3Template, @Value("${amazon.s3.default-bucket}") String bucketName) {
+	public S3Controller(AmazonS3Template amazonS3Template, @Value("${amazon.s3.default-bucket}") String bucketName, ToolRepo toolRepo) {
 		this.amazonS3Template = amazonS3Template;
 		this.bucketName = bucketName;
+		this.toolRepo = toolRepo;
 		System.out.println("S3Controller: bucket " + bucketName);
 	}
 
@@ -59,21 +61,21 @@ public class S3Controller {
 				ObjectMetadata objectMetadata = new ObjectMetadata();
 				objectMetadata.setContentType(file.getContentType());
 				
-//				amazonS3Template.getAmazonS3Client()
-//						.putObject(new PutObjectRequest(bucketName, name, file.getInputStream(), objectMetadata)
-//								.withCannedAcl(CannedAccessControlList.PublicRead));
+				amazonS3Template.getAmazonS3Client()
+						.putObject(new PutObjectRequest(bucketName, name, file.getInputStream(), objectMetadata)
+								.withCannedAcl(CannedAccessControlList.PublicRead));
 				System.out.println("S3Controller: upload complete");
-//				String imageURL = String.valueOf(amazonS3Template.getAmazonS3Client().getUrl(bucketName, name));
-				String imageURL = "https://s3-us-west-2.amazonaws.com/goforcode-oct2017-communityshade/aimage.jpg";
+				String imageURL = String.valueOf(amazonS3Template.getAmazonS3Client().getUrl(bucketName, name));
 				System.out.println("S3Controller: URL: " + imageURL);
 				System.out.println("S3Controller: toolId: " + toolId);
-				toolRepo.getOne(toolId);
+				Tool tool = toolRepo.getOne(toolId);
 				System.out.println("S3Controller: After getOne");
 				tool.setImage(imageURL);
 				System.out.println("S3Controller: After setImage");
 				toolRepo.save(tool);
 				System.out.println("S3Controller: After DB save");
 				ObjectMapper mapper =new ObjectMapper();
+				mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 				System.out.println("S3Controller: S3 Completed");
 				return mapper.writeValueAsString(tool);
 
