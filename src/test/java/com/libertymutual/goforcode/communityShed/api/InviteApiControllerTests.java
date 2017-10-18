@@ -92,14 +92,33 @@ public class InviteApiControllerTests {
 		
 		//Assert
 		verify(groupRepo, times(2)).save(group1);
+		verify(ivr).findByInvitationKey(key);
 		verify(ivr).delete(invited);
 		verify(confirmedUserRepo).save(confirmed);
 		verify(userDetails).loadUserByUsername("a@a.com");
 		assertThat(group1.getUsers()).contains(confirmed);
-//		assertThat()
+		assertThat(group1.getPendingUsers()).doesNotContain(confirmed);
 		assertThat(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).isSameAs(confirmed);
+		assertThat(confirmedUserReturned).isSameAs(confirmed);
+	}
+	
+	@Test
+	public void test_convertInvitedUserAndLogin_returns_null_if_emails_do_not_match()	{
+		//Arrange
+		ConfirmedUser confirmed = new ConfirmedUser("test", "a@a.com", "First", "Last");
+		InvitedUser invited = new InvitedUser();
+		invited.setEmail("a@b.com");
+		UUID key = UUID.randomUUID();
+		invited.setInvitationKey(key);
 		
+		when(ivr.findByInvitationKey(key)).thenReturn(invited);
 		
+		//Act
+		ConfirmedUser confirmedUserReturned = controller.convertInvitedUserAndLogin(confirmed, key);
+		
+		//Assert
+		verify(ivr).findByInvitationKey(key);
+		assertThat(confirmedUserReturned).isNull();
 	}
 
 }
