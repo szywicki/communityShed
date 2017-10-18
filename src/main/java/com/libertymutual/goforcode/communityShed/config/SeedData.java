@@ -11,9 +11,7 @@ import com.libertymutual.goforcode.communityShed.models.Group;
 import com.libertymutual.goforcode.communityShed.models.Tool;
 import com.libertymutual.goforcode.communityShed.models.User;
 import com.libertymutual.goforcode.communityShed.repositories.GroupRepo;
-import com.libertymutual.goforcode.communityShed.repositories.InviteRepo;
 import com.libertymutual.goforcode.communityShed.repositories.RequestRepo;
-import com.libertymutual.goforcode.communityShed.repositories.SessionRepo;
 import com.libertymutual.goforcode.communityShed.repositories.ToolRepo;
 import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
 import com.libertymutual.goforcode.communityShed.repositories.ConfirmedUserRepo;
@@ -23,12 +21,8 @@ import com.libertymutual.goforcode.communityShed.repositories.ConfirmedUserRepo;
 
 public class SeedData {
 
-	private PasswordEncoder encoder;
+	public SeedData(ToolRepo toolRepo, UserRepo userRepo, GroupRepo groupRepo, RequestRepo requestRepo, PasswordEncoder encoder) {
 	
-	public SeedData(ToolRepo toolRepo, UserRepo userRepo, GroupRepo groupRepo, InviteRepo inviteRepo, SessionRepo sessionRepo, RequestRepo requestRepo, PasswordEncoder encoder) {
-	
-		this.encoder = encoder;
-		
 		Group group1 = new Group ("eighties", "The Eighties Group");
 		Group group2 = new Group ("sixties", "The Sixties Group");
 		
@@ -44,7 +38,7 @@ public class SeedData {
 		group2.addUserToGroup(user2);
 		
 		
-		Tool tool =new Tool("Hammer Drill", "Bosh 13.5 Amp Corded 1-78 in. Rotary Hammer Drill", "Power Tool", "Bosh", null, null, "Available", 1, "https://s3-us-west-2.amazonaws.com/goforcode-oct2017-communityshade/Bosh+13.5+Amp+Corded+1-78+in.+Rotary+Hammer+Drill.jpg", user1);	
+		new Tool("Hammer Drill", "Bosh 13.5 Amp Corded 1-78 in. Rotary Hammer Drill", "Power Tool", "Bosh", null, null, "Available", 1, "https://s3-us-west-2.amazonaws.com/goforcode-oct2017-communityshade/Bosh+13.5+Amp+Corded+1-78+in.+Rotary+Hammer+Drill.jpg", user1);	
 		toolRepo.save(new Tool("Flashlight", "Coast HP7 Focusing LED Flashlight", "Safety & Security", "Coast", null, null, "Available", 4, "https://s3-us-west-2.amazonaws.com/goforcode-oct2017-communityshade/Focusing+LED+Flashlight.jpg", user1));
 
 		groupRepo.save(group1);
