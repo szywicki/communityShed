@@ -17,10 +17,12 @@ import org.springframework.security.core.Authentication;
 import com.libertymutual.goforcode.communityShed.dtos.PendingGroupDto;
 import com.libertymutual.goforcode.communityShed.models.ConfirmedUser;
 import com.libertymutual.goforcode.communityShed.models.Group;
+import com.libertymutual.goforcode.communityShed.models.Tool;
 import com.libertymutual.goforcode.communityShed.models.User;
 import com.libertymutual.goforcode.communityShed.repositories.ConfirmedUserRepo;
 import com.libertymutual.goforcode.communityShed.repositories.GroupRepo;
 import com.libertymutual.goforcode.communityShed.repositories.InvitedUserRepo;
+import com.libertymutual.goforcode.communityShed.repositories.ToolRepo;
 import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
 
 public class GroupApiControllerTests {
@@ -31,6 +33,7 @@ public class GroupApiControllerTests {
 	private InvitedUserRepo invitedUserRepo;
 	private GroupApiController controller;
 	private Authentication auth;
+	private ToolRepo toolRepo;
 
 	@Before
 	public void setUp() {
@@ -141,27 +144,76 @@ public class GroupApiControllerTests {
 		assertThat(NKOTB.getPendingUsers()).doesNotContain(currentUser);
 	}
 	
+	@Test
+	public void test_denyInvite_returns_list_of_user_groups_not_including_pending_group() {
+				// Arrange
+				ArrayList<Group> groups = new ArrayList<Group>();
+				ArrayList<Group> pendingGroups = new ArrayList<Group>();
+				ConfirmedUser currentUser = new ConfirmedUser();
+				Group NKOTB = new Group();
+				NKOTB.addPendingUserToGroup(currentUser);
+				pendingGroups.add(NKOTB);
+				currentUser.setId(1l);
+				currentUser.setPendingGroups(pendingGroups);
+				when(groupRepo.save(NKOTB)).thenReturn(NKOTB);
+				when(groupRepo.findOne(3l)).thenReturn(NKOTB);
+				when(confirmedUserRepo.findOne(1l)).thenReturn(currentUser);
+				when(auth.getPrincipal()).thenReturn((User)currentUser);
+				
+				// Act
+				List<Group> actual = controller.denyInvite(3l, auth);
+				
+				// Assert
+				verify(auth).getPrincipal();
+				verify(groupRepo).save(NKOTB);
+				assertThat(actual).isNull();
+				assertThat(NKOTB.getPendingUsers()).doesNotContain(currentUser);
+	}
+	
 //	@Test
-//	public void test_denyInvite_returns_list_of_user_groups_not_including_pending_group() {
+//	public void test_getTools() {
+//		// Arrange
+//		ArrayList<User> users = new ArrayList<User>();
+//		ArrayList<Tool> tools = new ArrayList<Tool>();
+//		ConfirmedUser currentUser = new ConfirmedUser();
+//		Tool tool = new Tool();
+//		Group group = new Group();
+//		group.setId(3l);
+//		when(groupRepo.findOne(3l)).thenReturn(group);
+////		when(toolRepo.findAll(group.getUsers()).thenReturn(user.getTools());
+//		
+//		// Act
+//		List<Tool> actual = controller.getTools(3l);
+//		
+//		// Assert
+//		verify(auth).getPrincipal();
+//		verify(groupRepo).save(group);
+//		verify(groupRepo).findOne(3l);
+//		assertThat(actual).isNull();
+//		assertThat(group.getPendingUsers()).doesNotContain(currentUser);
+//		
+//	}
+	
+//	@Test
+//	public void test_getGroups_returns_list_of_groups_user_is_member_of() {
 //				// Arrange
-////				ArrayList<Group> groups = new ArrayList<Group>();
-//				ArrayList<Group> pendingGroups = new ArrayList<Group>();
+//				ArrayList<Group> groups = new ArrayList<Group>();
 //				ConfirmedUser currentUser = new ConfirmedUser();
 //				Group NKOTB = new Group();
-//				pendingGroups.add(NKOTB);
-//				NKOTB.addPendingUserToGroup(currentUser);
-//				currentUser.setPendingGroups(pendingGroups);
-//				when(groupRepo.findOne(3l)).thenReturn(NKOTB);
-//				when(groupRepo.save(NKOTB)).thenReturn(NKOTB);
+//				currentUser.setId(1l);
+//				currentUser.addGroup(NKOTB);
+//				NKOTB.addUserToGroup(currentUser);
+//				when(confirmedUserRepo.findOne(1l)).thenReturn(currentUser);
 //				when(auth.getPrincipal()).thenReturn((User)currentUser);
 //				
+//				
 //				// Act
-//				List<Group> actual = controller.denyInvite(3l, auth);
+//				List<Group> actual = controller.getGroups(auth);
 //				
 //				// Assert
+//				verify(groupRepo).findOne(2l);
 //				verify(auth).getPrincipal();
-//				verify(groupRepo).save(NKOTB);
-//				assertThat(actual).doesNotContain(NKOTB);
-//				assertThat(NKOTB.getPendingUsers()).doesNotContain(currentUser);
+//				assertThat(actual).contains(NKOTB);
+//		
 //	}
 }

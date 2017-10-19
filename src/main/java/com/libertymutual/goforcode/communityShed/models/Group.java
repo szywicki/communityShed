@@ -59,6 +59,7 @@ public class Group {
 			users = new ArrayList<User>();
 		}
 		users.add(user);
+		
 	}
 
 	public void removeUserFromGroup(User user) {
