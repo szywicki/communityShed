@@ -1,7 +1,9 @@
 package com.libertymutual.goforcode.communityShed.models;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,10 +35,10 @@ public class Group {
 	private String groupDescription;
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	private List<User> users;
+	private Set<User> users;
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	private List<User> pendingUsers;
+	private Set<User> pendingUsers;
 
 	public Group() {
 	}
@@ -56,7 +58,7 @@ public class Group {
 
 	public void addUserToGroup(User user) {
 		if (users == null) {
-			users = new ArrayList<User>();
+			users = new HashSet<User>();
 		}
 		users.add(user);
 	}
@@ -81,17 +83,17 @@ public class Group {
 		this.groupDescription = groupDescription;
 	}
 
-	public List<User> getUsers() {
+	public Set<User> getUsers() {
 		return users;
 	}
 
-	public void setUsers(List<User> users) {
+	public void setUsers(Set<User> users) {
 		this.users = users;
 	}
 
 	public void addPendingUserToGroup(User user) {
 		if (pendingUsers == null) {
-			pendingUsers = new ArrayList<User>();
+			pendingUsers = new HashSet<User>();
 		}
 		pendingUsers.add(user);
 	}
@@ -119,11 +121,11 @@ public class Group {
 		return getId().hashCode();
 	}
 
-	public List<User> getPendingUsers() {
+	public Set<User> getPendingUsers() {
 		return pendingUsers;
 	}
 
-	public void setPendingUsers(List<User> pendingUsers) {
+	public void setPendingUsers(Set<User> pendingUsers) {
 		this.pendingUsers = pendingUsers;
 	}
 }

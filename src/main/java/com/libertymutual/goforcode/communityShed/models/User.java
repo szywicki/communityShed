@@ -1,6 +1,7 @@
 package com.libertymutual.goforcode.communityShed.models;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -34,10 +35,10 @@ public abstract class User implements UserDetails {
 		
 	@JsonIgnore
 	@ManyToMany(fetch=FetchType.EAGER, mappedBy="users", cascade=CascadeType.ALL)
-	private List<Group> groups;
+	private Set<Group> groups;
 	
 	@ManyToMany(fetch=FetchType.EAGER, mappedBy="pendingUsers", cascade=CascadeType.ALL)
-	private List<Group> pendingGroups;
+	private Set<Group> pendingGroups;
 	
 	
 	public User() {}
@@ -74,21 +75,21 @@ public abstract class User implements UserDetails {
 	}
 
 
-	public List<Group> getGroups() {
+	public Set<Group> getGroups() {
 		return groups;
 	}
 
-	public void setGroups(List<Group> groups) {
+	public void setGroups(Set<Group> groups) {
 		this.groups = groups;
 	}
 	
 	public abstract void inviteToGroup(Group group, MailGunEmailService emailer);
 
-	public List<Group> getPendingGroups() {
+	public Set<Group> getPendingGroups() {
 		return pendingGroups;
 	}
 
-	public void setPendingGroups(List<Group> pendingGroups) {
+	public void setPendingGroups(Set<Group> pendingGroups) {
 		this.pendingGroups = pendingGroups;
 	}
 	
