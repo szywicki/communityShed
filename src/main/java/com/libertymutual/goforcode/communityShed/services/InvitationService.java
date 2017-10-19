@@ -33,14 +33,15 @@ public class InvitationService {
 				invitedUserRepo.save(invited);
 				groupRepo.save(group);
 				invited.inviteToGroup(group, emailer);
+				return true;
 			} 
 			//invite an existing user if they aren't already in the group or invited to the group
 			else if (!existingUser.getGroups().contains(group) && !existingUser.getPendingGroups().contains(group)) {
 				group.addPendingUserToGroup(existingUser);
 				groupRepo.save(group);
 				existingUser.inviteToGroup(group, emailer);
+				return true;
 			}
-			return true;
 		}
 		return false;
 	}

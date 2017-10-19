@@ -39,6 +39,7 @@ public class InviteApiControllerTests {
 	private Authentication auth;
 	private ConfirmedUserService cus;
 	private InvitationService inviteService;
+	private HttpServletResponse httpResponse;
 	
 	@Before
 	public void setUp()	{
@@ -51,6 +52,7 @@ public class InviteApiControllerTests {
 		auth = mock(Authentication.class);
 		cus = mock(ConfirmedUserService.class);
 		inviteService = mock(InvitationService.class);
+		httpResponse = mock(HttpServletResponse.class);
 		controller = new InviteApiController(userRepo, groupRepo, confirmedUserRepo, ivr, encoder, userDetails, cus, inviteService);
 	}
 
@@ -91,7 +93,7 @@ public class InviteApiControllerTests {
 
 		
 		//Act
-		ConfirmedUser confirmedUserReturned = controller.convertInvitedUserAndLogin(confirmed, key);
+		ConfirmedUser confirmedUserReturned = controller.convertInvitedUserAndLogin(confirmed, key, httpResponse);
 		
 		//Assert
 		verify(ivr).findByInvitationKey(key);
@@ -113,7 +115,7 @@ public class InviteApiControllerTests {
 		when(cus.convertInvitedUserToConfirmedUser(confirmed, invited)).thenReturn(null);
 		
 		//Act
-		ConfirmedUser confirmedUserReturned = controller.convertInvitedUserAndLogin(confirmed, key);
+		ConfirmedUser confirmedUserReturned = controller.convertInvitedUserAndLogin(confirmed, key, httpResponse);
 		
 		//Assert
 		verify(ivr).findByInvitationKey(key);
@@ -123,9 +125,16 @@ public class InviteApiControllerTests {
 //	@Test
 //	public void test_inviteUser_adds_pending_user_to_group_for_new_user_with_valid_inputs()	{
 //		//Arrange
-//		
-//		
-//		when(emailer)
+//		ConfirmedUser authUser = new ConfirmedUser("test", "a@a.com", "First", "Last");
+//		authUser.setId(1L);
+//		inviteEmail input = new inviteEmail();
+//		input.setEmail("newguy@domain.com");
+//		Group group = new Group();
+//		when(userRepo.findByEmail("newguy@domain.com"));
+//		when(groupRepo.findOne(1L)).thenReturn(group);
+//		when(auth.getPrincipal()).thenReturn(authUser);
+//		when(confirmedUserRepo.findOne(1L)).thenReturn(authUser);
+//		when(inviteService.sendInvitation(authUser, existingUser, group, email))
 //		
 //		//Act
 //		

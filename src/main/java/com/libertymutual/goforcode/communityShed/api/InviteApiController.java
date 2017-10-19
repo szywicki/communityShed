@@ -80,7 +80,7 @@ public class InviteApiController {
 		return null;
 	}
 	
-	@ApiOperation("Generate invite for a group")
+	@ApiOperation("Generate invite to a group")
 	@PostMapping("group/{groupId}")
 	public void	inviteUser(Authentication auth, @RequestBody inviteEmail inviteEmail, @PathVariable long groupId, HttpServletResponse response)	{
 		//get session user
