@@ -216,4 +216,28 @@ public class GroupApiControllerTests {
 //				assertThat(actual).contains(NKOTB);
 //		
 //	}
-}
+//	
+////	@Test
+////	public void test_denyInvite_returns_list_of_user_groups_not_including_pending_group() {
+////				// Arrange
+//////				ArrayList<Group> groups = new ArrayList<Group>();
+////				ArrayList<Group> pendingGroups = new ArrayList<Group>();
+////				ConfirmedUser currentUser = new ConfirmedUser();
+////				Group NKOTB = new Group();
+////				pendingGroups.add(NKOTB);
+////				NKOTB.addPendingUserToGroup(currentUser);
+////				currentUser.setPendingGroups(pendingGroups);
+////				when(groupRepo.findOne(3l)).thenReturn(NKOTB);
+////				when(groupRepo.save(NKOTB)).thenReturn(NKOTB);
+////				when(auth.getPrincipal()).thenReturn((User)currentUser);
+////				
+////				// Act
+////				List<Group> actual = controller.denyInvite(3l, auth);
+////				
+////				// Assert
+////				verify(auth).getPrincipal();
+////				verify(groupRepo).save(NKOTB);
+////				assertThat(actual).doesNotContain(NKOTB);
+////				assertThat(NKOTB.getPendingUsers()).doesNotContain(currentUser);
+////	}
+//}
