@@ -2,6 +2,7 @@ package com.libertymutual.goforcode.communityShed.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.Authentication;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.libertymutual.goforcode.communityShed.dtos.PendingGroupDto;
 import com.libertymutual.goforcode.communityShed.models.ConfirmedUser;
 import com.libertymutual.goforcode.communityShed.models.Group;
 import com.libertymutual.goforcode.communityShed.models.Tool;
@@ -71,10 +73,13 @@ public class GroupApiController {
 	// Methods added for invitation handling. 
 	@ApiOperation("Gets list of pendingGroup invites for the logged in user.")
 	@GetMapping("pendingInvites")
-	public List<Group> getPendingGroups(Authentication auth) {
+	public List<PendingGroupDto> getPendingGroups(Authentication auth) {
 		ConfirmedUser user = (ConfirmedUser) auth.getPrincipal();
 		user = (ConfirmedUser) confirmedUserRepo.findOne(user.getId());
-		return user.getPendingGroups();
+		return user.getPendingGroups()
+				.stream()
+				.map(group -> new PendingGroupDto(group))
+				.collect(Collectors.toList());
 	}
 	
 	@ApiOperation("Remove the user from the pending invite table into the group member table.")

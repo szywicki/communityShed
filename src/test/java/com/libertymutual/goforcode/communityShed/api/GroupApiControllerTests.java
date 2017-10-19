@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 
+import com.libertymutual.goforcode.communityShed.dtos.PendingGroupDto;
 import com.libertymutual.goforcode.communityShed.models.ConfirmedUser;
 import com.libertymutual.goforcode.communityShed.models.Group;
 import com.libertymutual.goforcode.communityShed.models.User;
@@ -91,19 +92,28 @@ public class GroupApiControllerTests {
 	@Test
 	public void test_getPendingGroups_returns_list_of_pendingGroups() {
 		// Arrange
+		Group group = new Group();
+		group.setId(4L);
+		group.setGroupName("Boy, howdy!");
 		ArrayList<Group> groups = new ArrayList<Group>();
+		groups.add(group);
 		ConfirmedUser currentUser = new ConfirmedUser();
 		currentUser.setId(1l);
+		currentUser.setPendingGroups(groups);
+		
 		when(auth.getPrincipal()).thenReturn((User)currentUser);
 		when(confirmedUserRepo.findOne(1l)).thenReturn(currentUser);
 		
 		// Act
-		List<Group> actual = controller.getPendingGroups(auth);
+		List<PendingGroupDto> actual = controller.getPendingGroups(auth);
 		
 		// Assert
 		verify(auth).getPrincipal();
 		verify(confirmedUserRepo).findOne(1l);
-		assertThat(currentUser.getPendingGroups()).isSameAs(actual);
+		assertThat(actual.size()).isEqualTo(1);
+		PendingGroupDto dto = actual.get(0);
+		assertThat(dto.getId()).isEqualTo(4L);
+		assertThat(dto.getGroupName()).isEqualTo("Boy, howdy!");
 	}
 	
 	@Test
@@ -133,19 +143,25 @@ public class GroupApiControllerTests {
 	
 //	@Test
 //	public void test_denyInvite_returns_list_of_user_groups_not_including_pending_group() {
-//		// Arrange
-//				ArrayList<Group> groups = new ArrayList<Group>();
+//				// Arrange
+////				ArrayList<Group> groups = new ArrayList<Group>();
 //				ArrayList<Group> pendingGroups = new ArrayList<Group>();
 //				ConfirmedUser currentUser = new ConfirmedUser();
 //				Group NKOTB = new Group();
+//				pendingGroups.add(NKOTB);
 //				NKOTB.addPendingUserToGroup(currentUser);
-//				currentUser.setGroups(groups);
 //				currentUser.setPendingGroups(pendingGroups);
-//				when(groupRepo.save(NKOTB)).thenReturn(NKOTB);
 //				when(groupRepo.findOne(3l)).thenReturn(NKOTB);
+//				when(groupRepo.save(NKOTB)).thenReturn(NKOTB);
 //				when(auth.getPrincipal()).thenReturn((User)currentUser);
 //				
 //				// Act
 //				List<Group> actual = controller.denyInvite(3l, auth);
+//				
+//				// Assert
+//				verify(auth).getPrincipal();
+//				verify(groupRepo).save(NKOTB);
+//				assertThat(actual).doesNotContain(NKOTB);
+//				assertThat(NKOTB.getPendingUsers()).doesNotContain(currentUser);
 //	}
 }
