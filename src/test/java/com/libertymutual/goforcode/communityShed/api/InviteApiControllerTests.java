@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.core.Authentication;
@@ -20,6 +22,8 @@ import com.libertymutual.goforcode.communityShed.repositories.ConfirmedUserRepo;
 import com.libertymutual.goforcode.communityShed.repositories.GroupRepo;
 import com.libertymutual.goforcode.communityShed.repositories.InvitedUserRepo;
 import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
+import com.libertymutual.goforcode.communityShed.services.ConfirmedUserService;
+import com.libertymutual.goforcode.communityShed.services.InvitationService;
 import com.libertymutual.goforcode.communityShed.services.MailGunEmailService;
 import com.libertymutual.goforcode.communityShed.services.ShedUserDetailsService;
 
@@ -29,12 +33,12 @@ public class InviteApiControllerTests {
 	private UserRepo userRepo;
 	private GroupRepo groupRepo;
 	private ConfirmedUserRepo confirmedUserRepo;
-	private MailGunEmailService emailer;
 	private PasswordEncoder encoder;
 	private ShedUserDetailsService userDetails;
 	private InviteApiController controller;
 	private Authentication auth;
-	private SecurityContextHolder sch;
+	private ConfirmedUserService cus;
+	private InvitationService inviteService;
 	
 	@Before
 	public void setUp()	{
@@ -42,12 +46,12 @@ public class InviteApiControllerTests {
 		userRepo = mock(UserRepo.class);
 		groupRepo = mock(GroupRepo.class);
 		confirmedUserRepo = mock(ConfirmedUserRepo.class);
-		emailer = mock(MailGunEmailService.class);
 		encoder = mock(PasswordEncoder.class);
 		userDetails = mock(ShedUserDetailsService.class);
 		auth = mock(Authentication.class);
-		sch = mock(SecurityContextHolder.class);
-		controller = new InviteApiController(userRepo, groupRepo, confirmedUserRepo, ivr, emailer, encoder, userDetails);
+		cus = mock(ConfirmedUserService.class);
+		inviteService = mock(InvitationService.class);
+		controller = new InviteApiController(userRepo, groupRepo, confirmedUserRepo, ivr, encoder, userDetails, cus, inviteService);
 	}
 
 	@Test
@@ -81,8 +85,7 @@ public class InviteApiControllerTests {
 		invited.setPendingGroups(pendingGroups);
 		
 		when(ivr.findByInvitationKey(key)).thenReturn(invited);
-		when(confirmedUserRepo.save(confirmed)).thenReturn(confirmed);
-		when(encoder.encode(confirmed.getPassword())).thenReturn("12345");
+		when(cus.convertInvitedUserToConfirmedUser(confirmed, invited)).thenReturn(confirmed);
 		when(userDetails.loadUserByUsername("a@a.com")).thenReturn(confirmed);
 		
 
@@ -91,19 +94,14 @@ public class InviteApiControllerTests {
 		ConfirmedUser confirmedUserReturned = controller.convertInvitedUserAndLogin(confirmed, key);
 		
 		//Assert
-		verify(groupRepo, times(2)).save(group1);
 		verify(ivr).findByInvitationKey(key);
-		verify(ivr).delete(invited);
-		verify(confirmedUserRepo).save(confirmed);
 		verify(userDetails).loadUserByUsername("a@a.com");
-		assertThat(group1.getUsers()).contains(confirmed);
-		assertThat(group1.getPendingUsers()).doesNotContain(confirmed);
 		assertThat(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).isSameAs(confirmed);
 		assertThat(confirmedUserReturned).isSameAs(confirmed);
 	}
 	
 	@Test
-	public void test_convertInvitedUserAndLogin_returns_null_if_emails_do_not_match()	{
+	public void test_convertInvitedUserAndLogin_returns_null_if_confirmedUserService_returns_a_null()	{
 		//Arrange
 		ConfirmedUser confirmed = new ConfirmedUser("test", "a@a.com", "First", "Last");
 		InvitedUser invited = new InvitedUser();
@@ -112,6 +110,7 @@ public class InviteApiControllerTests {
 		invited.setInvitationKey(key);
 		
 		when(ivr.findByInvitationKey(key)).thenReturn(invited);
+		when(cus.convertInvitedUserToConfirmedUser(confirmed, invited)).thenReturn(null);
 		
 		//Act
 		ConfirmedUser confirmedUserReturned = controller.convertInvitedUserAndLogin(confirmed, key);
@@ -119,6 +118,33 @@ public class InviteApiControllerTests {
 		//Assert
 		verify(ivr).findByInvitationKey(key);
 		assertThat(confirmedUserReturned).isNull();
+	}
+	
+//	@Test
+//	public void test_inviteUser_adds_pending_user_to_group_for_new_user_with_valid_inputs()	{
+//		//Arrange
+//		
+//		
+//		when(emailer)
+//		
+//		//Act
+//		
+//		
+//		//Assert
+//		
+//		
+//	}
+	
+	static class inviteEmail	{
+		private String email;
+
+		public String getEmail() {
+			return email;
+		}
+
+		public void setEmail(String email) {
+			this.email = email;
+		}
 	}
 
 }
