@@ -2,6 +2,8 @@ package com.libertymutual.goforcode.communityShed.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.Authentication;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.libertymutual.goforcode.communityShed.dtos.PendingGroupDto;
 import com.libertymutual.goforcode.communityShed.models.ConfirmedUser;
 import com.libertymutual.goforcode.communityShed.models.Group;
 import com.libertymutual.goforcode.communityShed.models.Tool;
@@ -63,7 +66,7 @@ public class GroupApiController {
 	
 	@ApiOperation("Get list of users in that group")
 	@GetMapping("{groupId}/users")
-	public List<User> getUsers(@PathVariable long groupId) {
+	public Set<User> getUsers(@PathVariable long groupId) {
 		Group group = groupRepo.findOne(groupId);
 		return group.getUsers();
 	}
@@ -71,15 +74,18 @@ public class GroupApiController {
 	// Methods added for invitation handling. 
 	@ApiOperation("Gets list of pendingGroup invites for the logged in user.")
 	@GetMapping("pendingInvites")
-	public List<Group> getPendingGroups(Authentication auth) {
+	public List<PendingGroupDto> getPendingGroups(Authentication auth) {
 		ConfirmedUser user = (ConfirmedUser) auth.getPrincipal();
 		user = (ConfirmedUser) confirmedUserRepo.findOne(user.getId());
-		return user.getPendingGroups();
+		return user.getPendingGroups()
+				.stream()
+				.map(group -> new PendingGroupDto(group))
+				.collect(Collectors.toList());
 	}
 	
 	@ApiOperation("Remove the user from the pending invite table into the group member table.")
 	@PutMapping("{groupId}/user/accept")
-	public List<Group> acceptInvite(@PathVariable long groupId, Authentication auth) {
+	public Set<Group> acceptInvite(@PathVariable long groupId, Authentication auth) {
 		ConfirmedUser user = (ConfirmedUser) auth.getPrincipal();
 		Group group = groupRepo.findOne(groupId);
 		group.removePendingUserFromGroup(user);
@@ -91,7 +97,7 @@ public class GroupApiController {
 	
 	@ApiOperation("remove the user from the pending relationship table.")
 	@PutMapping("{groupId}/user/deny")
-	public List<Group> denyInvite(@PathVariable long groupId, Authentication auth) {
+	public Set<Group> denyInvite(@PathVariable long groupId, Authentication auth) {
 		ConfirmedUser user = (ConfirmedUser) auth.getPrincipal();
 		Group group = groupRepo.findOne(groupId);
 		group.removePendingUserFromGroup(user);
@@ -115,7 +121,7 @@ public class GroupApiController {
 	
 	@ApiOperation("Gets list of groups that user is a member of.")
 	@GetMapping("")
-	public List<Group> getGroups(Authentication auth) {
+	public Set<Group> getGroups(Authentication auth) {
 		ConfirmedUser user = (ConfirmedUser) auth.getPrincipal();
 		user = (ConfirmedUser) confirmedUserRepo.findOne(user.getId());
 		return user.getGroups();
