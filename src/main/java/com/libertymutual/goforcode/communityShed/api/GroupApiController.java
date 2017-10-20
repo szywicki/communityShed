@@ -108,11 +108,15 @@ public class GroupApiController {
 	
 	@ApiOperation("Get list of tools owned by that group")
 	@GetMapping("{groupId}/tools")
-	public List<Tool> getTools(@PathVariable long groupId) {
+	public List<Tool> getTools(@PathVariable long groupId, Authentication auth) {
 		Group group = groupRepo.findOne(groupId);
+		ConfirmedUser user = (ConfirmedUser) auth.getPrincipal();
+		user = (ConfirmedUser) confirmedUserRepo.findOne(user.getId());
 		List<Tool> tools = new ArrayList<Tool>();
-        for (User user : group.getUsers()) {
-            tools.addAll(user.getTools());
+        for (User users : group.getUsers()) {
+        	if (users != user) {
+            tools.addAll(users.getTools());
+        	}
         }
         return tools;
 	}
