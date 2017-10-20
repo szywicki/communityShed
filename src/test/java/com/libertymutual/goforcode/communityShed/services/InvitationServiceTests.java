@@ -3,8 +3,8 @@ package com.libertymutual.goforcode.communityShed.services;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +35,7 @@ public class InvitationServiceTests {
 		//Arrange
 		Group group = new Group();
 		ConfirmedUser authUser = new ConfirmedUser("test", "a@a.com", "First", "Last");
-		List<Group> groups = new ArrayList<Group>();
+		Set<Group> groups = new HashSet<Group>();
 		groups.add(group);
 		authUser.setGroups(groups);
 		User existingUser = null;
@@ -55,11 +55,11 @@ public class InvitationServiceTests {
 		//Arrange
 		Group group = new Group();
 		ConfirmedUser authUser = new ConfirmedUser("test", "a@a.com", "First", "Last");
-		List<Group> groups = new ArrayList<Group>();
+		Set<Group> groups = new HashSet<Group>();
 		groups.add(group);
 		authUser.setGroups(groups);
-		List<Group> existingGroups = new ArrayList<Group>();
-		List<Group> existingPendingGroups = new ArrayList<Group>();
+		Set<Group> existingGroups = new HashSet<Group>();
+		Set<Group> existingPendingGroups = new HashSet<Group>();
 		User existingUser = new ConfirmedUser("test2", "existing@user.com", "Another", "Name");
 		existingUser.setGroups(existingGroups);
 		existingUser.setPendingGroups(existingPendingGroups);
@@ -78,7 +78,7 @@ public class InvitationServiceTests {
 		//Arrange
 		Group group = new Group();
 		ConfirmedUser authUser = new ConfirmedUser("test", "a@a.com", "First", "Last");
-		List<Group> groups = new ArrayList<Group>();
+		Set<Group> groups = new HashSet<Group>();
 		authUser.setGroups(groups);
 		User existingUser = null;
 		
@@ -94,12 +94,12 @@ public class InvitationServiceTests {
 		//Arrange
 		Group group = new Group();
 		ConfirmedUser authUser = new ConfirmedUser("test", "a@a.com", "First", "Last");
-		List<Group> groups = new ArrayList<Group>();
+		Set<Group> groups = new HashSet<Group>();
 		groups.add(group);
 		authUser.setGroups(groups);
-		List<Group> existingGroups = new ArrayList<Group>();
+		Set<Group> existingGroups = new HashSet<Group>();
 		existingGroups.add(group);
-		List<Group> existingPendingGroups = new ArrayList<Group>();
+		Set<Group> existingPendingGroups = new HashSet<Group>();
 		User existingUser = new ConfirmedUser("test2", "existing@user.com", "Another", "Name");
 		existingUser.setGroups(existingGroups);
 		existingUser.setPendingGroups(existingPendingGroups);
@@ -116,11 +116,11 @@ public class InvitationServiceTests {
 		//Arrange
 		Group group = new Group();
 		ConfirmedUser authUser = new ConfirmedUser("test", "a@a.com", "First", "Last");
-		List<Group> groups = new ArrayList<Group>();
+		Set<Group> groups = new HashSet<Group>();
 		groups.add(group);
 		authUser.setGroups(groups);
-		List<Group> existingGroups = new ArrayList<Group>();
-		List<Group> existingPendingGroups = new ArrayList<Group>();
+		Set<Group> existingGroups = new HashSet<Group>();
+		Set<Group> existingPendingGroups = new HashSet<Group>();
 		existingPendingGroups.add(group);
 		User existingUser = new ConfirmedUser("test2", "existing@user.com", "Another", "Name");
 		existingUser.setGroups(existingGroups);

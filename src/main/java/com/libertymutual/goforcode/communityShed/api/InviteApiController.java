@@ -82,7 +82,7 @@ public class InviteApiController {
 	
 	@ApiOperation("Generate invite to a group")
 	@PostMapping("group/{groupId}")
-	public void	inviteUser(Authentication auth, @RequestBody inviteEmail inviteEmail, @PathVariable long groupId, HttpServletResponse response)	{
+	public Boolean	inviteUser(Authentication auth, @RequestBody inviteEmail inviteEmail, @PathVariable long groupId, HttpServletResponse response)	{
 		//get session user
 		ConfirmedUser authUser = (ConfirmedUser) auth.getPrincipal();
 		authUser = (ConfirmedUser) confirmedUserRepo.findOne(authUser.getId());
@@ -92,7 +92,9 @@ public class InviteApiController {
 		Boolean invitationSent = inviteService.sendInvitation(authUser, existingUser, group, inviteEmail.getEmail());
 		if(invitationSent == false)	{
 			response.setStatus(403);
+			return false;
 		}
+		return true;
 	}
 	
 	static class inviteEmail	{

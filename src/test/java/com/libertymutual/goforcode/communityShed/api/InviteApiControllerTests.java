@@ -3,8 +3,8 @@ package com.libertymutual.goforcode.communityShed.api;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
@@ -18,13 +18,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.libertymutual.goforcode.communityShed.models.ConfirmedUser;
 import com.libertymutual.goforcode.communityShed.models.Group;
 import com.libertymutual.goforcode.communityShed.models.InvitedUser;
+import com.libertymutual.goforcode.communityShed.models.User;
 import com.libertymutual.goforcode.communityShed.repositories.ConfirmedUserRepo;
 import com.libertymutual.goforcode.communityShed.repositories.GroupRepo;
 import com.libertymutual.goforcode.communityShed.repositories.InvitedUserRepo;
 import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
 import com.libertymutual.goforcode.communityShed.services.ConfirmedUserService;
 import com.libertymutual.goforcode.communityShed.services.InvitationService;
-import com.libertymutual.goforcode.communityShed.services.MailGunEmailService;
 import com.libertymutual.goforcode.communityShed.services.ShedUserDetailsService;
 
 public class InviteApiControllerTests {
@@ -82,7 +82,7 @@ public class InviteApiControllerTests {
 		invited.setInvitationKey(key);
 		Group group1 = new Group();
 		group1.addPendingUserToGroup(invited);
-		List<Group> pendingGroups = new ArrayList<Group>();
+		Set<Group> pendingGroups = new HashSet<Group>();
 		pendingGroups.add(group1);
 		invited.setPendingGroups(pendingGroups);
 		
@@ -122,38 +122,62 @@ public class InviteApiControllerTests {
 		assertThat(confirmedUserReturned).isNull();
 	}
 	
-//	@Test
-//	public void test_inviteUser_adds_pending_user_to_group_for_new_user_with_valid_inputs()	{
-//		//Arrange
-//		ConfirmedUser authUser = new ConfirmedUser("test", "a@a.com", "First", "Last");
-//		authUser.setId(1L);
-//		inviteEmail input = new inviteEmail();
-//		input.setEmail("newguy@domain.com");
-//		Group group = new Group();
-//		when(userRepo.findByEmail("newguy@domain.com"));
-//		when(groupRepo.findOne(1L)).thenReturn(group);
-//		when(auth.getPrincipal()).thenReturn(authUser);
-//		when(confirmedUserRepo.findOne(1L)).thenReturn(authUser);
-//		when(inviteService.sendInvitation(authUser, existingUser, group, email))
-//		
-//		//Act
-//		
-//		
-//		//Assert
-//		
-//		
-//	}
+	@Test
+	public void test_inviteUser_returns_true_when_sendInvitation_returns_true()	{
+		//Arrange
+		ConfirmedUser authUser = new ConfirmedUser("test", "a@a.com", "First", "Last");
+		authUser.setId(1L);
+		User existingUser = new ConfirmedUser("test2", "newguy@domain.com", "First", "Last");
+		InviteApiController.inviteEmail input = new InviteApiController.inviteEmail();
+		input.setEmail("newguy@domain.com");
+		Group group = new Group();
+		
+		when(userRepo.findByEmail("newguy@domain.com")).thenReturn(existingUser);
+		when(groupRepo.findOne(1L)).thenReturn(group);
+		when(auth.getPrincipal()).thenReturn(authUser);
+		when(confirmedUserRepo.findOne(1L)).thenReturn(authUser);
+		when(inviteService.sendInvitation(authUser, existingUser, group, input.getEmail())).thenReturn(true);
+		
+		//Act
+		Boolean invitationSent = controller.inviteUser(auth, input, 1L, httpResponse);
+		
+		//Assert
+		verify(userRepo).findByEmail("newguy@domain.com");
+		verify(groupRepo).findOne(1L);
+		verify(auth).getPrincipal();
+		verify(confirmedUserRepo).findOne(1L);
+		verify(inviteService).sendInvitation(authUser, existingUser, group, input.getEmail());
+		assertThat(invitationSent).isTrue();
+		
+	}
 	
-	static class inviteEmail	{
-		private String email;
-
-		public String getEmail() {
-			return email;
-		}
-
-		public void setEmail(String email) {
-			this.email = email;
-		}
+	@Test
+	public void test_inviteUser_returns_false_when_sendInvitation_returns_false()	{
+		//Arrange
+		ConfirmedUser authUser = new ConfirmedUser("test", "a@a.com", "First", "Last");
+		authUser.setId(1L);
+		User existingUser = new ConfirmedUser("test2", "newguy@domain.com", "First", "Last");
+		InviteApiController.inviteEmail input = new InviteApiController.inviteEmail();
+		input.setEmail("newguy@domain.com");
+		Group group = new Group();
+		
+		when(userRepo.findByEmail("newguy@domain.com")).thenReturn(existingUser);
+		when(groupRepo.findOne(1L)).thenReturn(group);
+		when(auth.getPrincipal()).thenReturn(authUser);
+		when(confirmedUserRepo.findOne(1L)).thenReturn(authUser);
+		when(inviteService.sendInvitation(authUser, existingUser, group, input.getEmail())).thenReturn(false);
+		
+		//Act
+		Boolean invitationSent = controller.inviteUser(auth, input, 1L, httpResponse);
+		
+		//Assert
+		verify(userRepo).findByEmail("newguy@domain.com");
+		verify(groupRepo).findOne(1L);
+		verify(auth).getPrincipal();
+		verify(confirmedUserRepo).findOne(1L);
+		verify(inviteService).sendInvitation(authUser, existingUser, group, input.getEmail());
+		assertThat(invitationSent).isFalse();
+		
 	}
 
 }

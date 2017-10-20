@@ -3,8 +3,9 @@ package com.libertymutual.goforcode.communityShed.services;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 import com.libertymutual.goforcode.communityShed.models.ConfirmedUser;
@@ -13,14 +14,12 @@ import com.libertymutual.goforcode.communityShed.models.InvitedUser;
 import com.libertymutual.goforcode.communityShed.repositories.ConfirmedUserRepo;
 import com.libertymutual.goforcode.communityShed.repositories.GroupRepo;
 import com.libertymutual.goforcode.communityShed.repositories.InvitedUserRepo;
-import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
 
 public class ConfirmedUserServiceTests {
 
 	private InvitedUserRepo ivr;
 	private GroupRepo groupRepo;
 	private ConfirmedUserRepo confirmedUserRepo;
-	private MailGunEmailService emailer;
 	private ConfirmedUserService cus;
 
 	@Before
@@ -28,7 +27,6 @@ public class ConfirmedUserServiceTests {
 		ivr = mock(InvitedUserRepo.class);
 		groupRepo = mock(GroupRepo.class);
 		confirmedUserRepo = mock(ConfirmedUserRepo.class);
-		emailer = mock(MailGunEmailService.class);
 		cus = new ConfirmedUserService(groupRepo, confirmedUserRepo, ivr);
 	}
 
@@ -40,7 +38,7 @@ public class ConfirmedUserServiceTests {
 		invited.setEmail("a@a.com");
 		Group group1 = new Group();
 		group1.addPendingUserToGroup(invited);
-		List<Group> pendingGroups = new ArrayList<Group>();
+		Set<Group> pendingGroups = new HashSet<Group>();
 		pendingGroups.add(group1);
 		invited.setPendingGroups(pendingGroups);
 
