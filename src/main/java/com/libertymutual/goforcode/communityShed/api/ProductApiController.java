@@ -1,9 +1,11 @@
 package com.libertymutual.goforcode.communityShed.api;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,24 +24,11 @@ public class ProductApiController {
 		this.productService = productService;
 	}
 	
-	@ApiOperation("Get list of products returned from Semantic3 service")
-	@PostMapping("")
-	public List<SemanticsProduct> getProducts(@RequestBody SearchTerm searchTerm)	{
-		return productService.getProducts(searchTerm.getSearchString());
+	@ApiOperation("Get list of products returned from Semantic3 service using offset value for mock pagination")
+	@GetMapping("{searchString}/{offset}")
+	public List<SemanticsProduct> getProducts(@PathVariable String searchString, @PathVariable int offset) throws UnsupportedEncodingException	{
+		searchString = URLDecoder.decode(searchString, "UTF-8");
+		return productService.getProducts(searchString, offset);
 	}
-	
-	static class SearchTerm	{
-		private String searchString;
-
-		public String getSearchString() {
-			return searchString;
-		}
-
-		public void setSearchString(String searchString) {
-			this.searchString = searchString;
-		}
-		
-	}
-	
 
 }

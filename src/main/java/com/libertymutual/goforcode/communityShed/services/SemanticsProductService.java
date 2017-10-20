@@ -26,10 +26,11 @@ public class SemanticsProductService {
 	@Value("${SEMANTICS_API_SECRET}")
 	private String secret;
 	
-	public List<SemanticsProduct> getProducts(String searchString)	{
+	public List<SemanticsProduct> getProducts(String searchString, int offset)	{
 		Products products = new Products(key, secret);
 
 		products.productsField( "search", searchString );
+		products.productsField( "offset", offset );
 		JSONObject results = null;
 		try {
 			results = products.getProducts();
