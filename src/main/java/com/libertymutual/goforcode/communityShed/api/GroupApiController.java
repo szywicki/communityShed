@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.libertymutual.goforcode.communityShed.dtos.GroupDto;
 import com.libertymutual.goforcode.communityShed.dtos.PendingGroupDto;
 import com.libertymutual.goforcode.communityShed.models.ConfirmedUser;
 import com.libertymutual.goforcode.communityShed.models.Group;
@@ -22,9 +22,6 @@ import com.libertymutual.goforcode.communityShed.models.Tool;
 import com.libertymutual.goforcode.communityShed.models.User;
 import com.libertymutual.goforcode.communityShed.repositories.ConfirmedUserRepo;
 import com.libertymutual.goforcode.communityShed.repositories.GroupRepo;
-import com.libertymutual.goforcode.communityShed.repositories.InvitedUserRepo;
-import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
-
 import io.swagger.annotations.ApiOperation;
 
 
@@ -35,22 +32,18 @@ import io.swagger.annotations.ApiOperation;
 public class GroupApiController {
 	
 	private GroupRepo groupRepo;
-	private UserRepo userRepo;
 	private ConfirmedUserRepo confirmedUserRepo;
-	private InvitedUserRepo invitedUserRepo;
 	
-	public GroupApiController (GroupRepo groupRepo, UserRepo userRepo, ConfirmedUserRepo confirmedUserRepo, InvitedUserRepo invitedUserRepo) {
+	public GroupApiController (GroupRepo groupRepo, ConfirmedUserRepo confirmedUserRepo) {
 		this.groupRepo = groupRepo;
-		this.userRepo = userRepo;
 		this.confirmedUserRepo = confirmedUserRepo;
-		this.invitedUserRepo = invitedUserRepo;
 	}
 		
 	
 	@ApiOperation("Get one Group by Id")
 	@GetMapping("{groupId}")
-	public Group getOneGroup(@PathVariable long id) {
-		return groupRepo.findOne(id); 
+	public Group getOneGroup(@PathVariable long groupId) {
+		return groupRepo.findOne(groupId); 
 	}	
 
 	
@@ -85,25 +78,31 @@ public class GroupApiController {
 	
 	@ApiOperation("Remove the user from the pending invite table into the group member table.")
 	@PutMapping("{groupId}/user/accept")
-	public Set<Group> acceptInvite(@PathVariable long groupId, Authentication auth) {
+	public Set<GroupDto> acceptInvite(@PathVariable long groupId, Authentication auth) {
 		ConfirmedUser user = (ConfirmedUser) auth.getPrincipal();
 		Group group = groupRepo.findOne(groupId);
 		group.removePendingUserFromGroup(user);
 		group.addUserToGroup(user);
 		groupRepo.save(group);
 		user.addGroup(group);
-		return user.getGroups();
+		return user.getGroups()
+				.stream()
+				.map(g -> new GroupDto(g))
+				.collect(Collectors.toSet());
 	}
 	
 	@ApiOperation("remove the user from the pending relationship table.")
 	@PutMapping("{groupId}/user/deny")
-	public Set<Group> denyInvite(@PathVariable long groupId, Authentication auth) {
+	public Set<GroupDto> denyInvite(@PathVariable long groupId, Authentication auth) {
 		ConfirmedUser user = (ConfirmedUser) auth.getPrincipal();
 		Group group = groupRepo.findOne(groupId);
 		group.removePendingUserFromGroup(user);
 		groupRepo.save(group);
 		user = (ConfirmedUser) confirmedUserRepo.findOne(user.getId());
-		return user.getGroups();
+		return user.getGroups()
+				.stream()
+				.map(g -> new GroupDto(g))
+				.collect(Collectors.toSet());
 	}
 	
 	
@@ -121,10 +120,13 @@ public class GroupApiController {
 	
 	@ApiOperation("Gets list of groups that user is a member of.")
 	@GetMapping("")
-	public Set<Group> getGroups(Authentication auth) {
+	public Set<GroupDto> getGroups(Authentication auth) {
 		ConfirmedUser user = (ConfirmedUser) auth.getPrincipal();
 		user = (ConfirmedUser) confirmedUserRepo.findOne(user.getId());
-		return user.getGroups();
+		return user.getGroups()
+				.stream()
+				.map(group -> new GroupDto(group))
+				.collect(Collectors.toSet());
 	}
 	
 }
