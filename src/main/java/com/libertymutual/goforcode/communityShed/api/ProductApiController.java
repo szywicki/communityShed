@@ -25,10 +25,10 @@ public class ProductApiController {
 	}
 	
 	@ApiOperation("Get list of products returned from Semantic3 service using offset value for mock pagination")
-	@GetMapping("{searchString}/{offset}")
-	public List<SemanticsProduct> getProducts(@PathVariable String searchString, @PathVariable int offset) throws UnsupportedEncodingException	{
+	@GetMapping("{searchString}")
+	public List<SemanticsProduct> getProducts(@PathVariable String searchString) throws UnsupportedEncodingException	{
 		searchString = URLDecoder.decode(searchString, "UTF-8");
-		return productService.getProducts(searchString, offset);
+		return productService.getProducts(searchString);
 	}
 
 }
