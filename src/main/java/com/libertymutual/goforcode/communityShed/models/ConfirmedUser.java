@@ -160,7 +160,5 @@ public class ConfirmedUser extends User {
 		}
 	}
 	
-	
-	
 }
 
