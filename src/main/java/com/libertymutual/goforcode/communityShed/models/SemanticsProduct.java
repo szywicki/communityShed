@@ -16,6 +16,9 @@ public class SemanticsProduct {
 	private String size;
 	private String[] images;
 	private Feature features;
+	private String manufacturer;
+	private String model;
+	private String mpn;
 	
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	static class Feature	{
@@ -116,6 +119,30 @@ public class SemanticsProduct {
 
 	public void setFeatures(Feature features) {
 		this.features = features;
+	}
+
+	public String getManufacturer() {
+		return manufacturer;
+	}
+
+	public void setManufacturer(String manufacturer) {
+		this.manufacturer = manufacturer;
+	}
+
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public String getMpn() {
+		return mpn;
+	}
+
+	public void setMpn(String mpn) {
+		this.mpn = mpn;
 	}
 
 }
