@@ -16,6 +16,9 @@ import com.libertymutual.goforcode.communityShed.models.Request;
 import com.libertymutual.goforcode.communityShed.models.Tool;
 import com.libertymutual.goforcode.communityShed.repositories.RequestRepo;
 import com.libertymutual.goforcode.communityShed.repositories.ToolRepo;
+import com.libertymutual.goforcode.communityShed.services.MailGunEmailService;
+import com.libertymutual.goforcode.communityShed.services.NotificationService;
+
 import io.swagger.annotations.ApiOperation;
 
 @RestController
@@ -25,11 +28,14 @@ public class RequestApiController {
 	
 	private RequestRepo requestRepo;
 	private ToolRepo toolRepo;
+	private MailGunEmailService emailer;
+	private NotificationService notifier;
 	
-	
-	public RequestApiController(RequestRepo requestRepo, ToolRepo toolRepo)	{
+	public RequestApiController(RequestRepo requestRepo, ToolRepo toolRepo, NotificationService notifier)	{
 		this.requestRepo = requestRepo;
 		this.toolRepo = toolRepo;
+		this.notifier = notifier;
+		
 	}
 	
 	@ApiOperation("creates a new request.  Date is expected in yyyy-mm-dd format.")
@@ -49,6 +55,11 @@ public class RequestApiController {
 		request.setLoaner(tool.getOwner());
 		toolRepo.save(tool);
 		requestRepo.save(request);
+//		Send Notification request to Tool Loaner
+		String emailAddress = tool.getOwner().getEmail();
+		String borrowerName = borrower.getFirstName()+ " " + borrower.getLastName();
+		String toolName = tool.getToolName();
+		notifier.notifyToolOwner(emailAddress, toolName, borrowerName);
 		return request;
 	}
 	
@@ -61,6 +72,11 @@ public class RequestApiController {
 		tool.setStatus("On Loan");
 		requestRepo.save(request);
 		toolRepo.save(tool);
+//		Send Notification acceptance to Tool Borrower
+		String emailAddress = request.getBorrower().getEmail();
+		String toolName = tool.getToolName();
+		String ownerName = tool.getOwner().getFirstName()+ " " + tool.getOwner().getLastName();
+		notifier.notifyToolBorrower(emailAddress, toolName, ownerName, request.getStatus());
 		return request;
 	}
 	
@@ -73,6 +89,11 @@ public class RequestApiController {
 		tool.setStatus("Available");
 		requestRepo.save(request);
 		toolRepo.save(tool);
+//		Send Notification denial to Tool Borrower
+		String emailAddress = request.getBorrower().getEmail();
+		String toolName = tool.getToolName();
+		String ownerName = tool.getOwner().getFirstName()+ " " + tool.getOwner().getLastName();
+		notifier.notifyToolBorrower(emailAddress, toolName, ownerName, request.getStatus());
 		return request;
 	}
 

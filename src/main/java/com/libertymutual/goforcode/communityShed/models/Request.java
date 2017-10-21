@@ -123,4 +123,9 @@ public class Request {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		return formatter.format(loanStartDate);
 	}
+	
+	public void notifyLoaner(ConfirmedUser loaner) {
+	
+		this.loaner = loaner;
+	}
 }

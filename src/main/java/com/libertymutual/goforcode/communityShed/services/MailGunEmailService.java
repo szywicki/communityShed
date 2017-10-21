@@ -19,6 +19,7 @@ public class MailGunEmailService {
 				.queryString("from", "CommunityShed Admin <admin@communityshed.online>")
 				.queryString("to", "brandvig@gmail.com")
 				.queryString("to", "erinleigh2000@gmail.com")
+				.queryString("to", "jeans771@hotmail.com")
 				.queryString("subject", subject)
 				.queryString("html", html)
 				.asString();
