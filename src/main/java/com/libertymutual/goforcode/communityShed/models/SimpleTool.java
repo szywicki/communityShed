@@ -9,6 +9,7 @@ public class SimpleTool {
 	private String category;
 	private String manufacturer;
 	private int toolAge;
+	private String image;
 	
 	
 	
@@ -42,4 +43,10 @@ public class SimpleTool {
 	public void setToolAge(int toolAge) {
 		this.toolAge = toolAge;
 }
+	public String getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		this.image = image;
+	}
 }
