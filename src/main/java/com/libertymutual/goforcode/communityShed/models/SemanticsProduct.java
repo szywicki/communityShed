@@ -15,7 +15,7 @@ public class SemanticsProduct {
 	private Double weight = 0.0;
 	private String size = "";
 	private String[] images = new String[1];
-	private Feature features;
+	private Feature features = new Feature();
 	private String manufacturer = "";
 	private String model = "";
 	private String mpn = "";
