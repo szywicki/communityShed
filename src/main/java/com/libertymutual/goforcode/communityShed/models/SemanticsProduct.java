@@ -5,24 +5,24 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SemanticsProduct {
 	
-	private String name;
-	private String brand;
-	private String color;
-	private String description;
-	private Double height;
-	private Double length;
-	private Double width;
-	private Double weight;
-	private String size;
-	private String[] images;
+	private String name = "";
+	private String brand = "";
+	private String color = "";
+	private String description = "";
+	private Double height = 0.0;
+	private Double length = 0.0;
+	private Double width = 0.0;
+	private Double weight = 0.0;
+	private String size = "";
+	private String[] images = new String[1];
 	private Feature features;
-	private String manufacturer;
-	private String model;
-	private String mpn;
+	private String manufacturer = "";
+	private String model = "";
+	private String mpn = "";
 	
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	static class Feature	{
-		private String blob;
+		private String blob = "";
 
 		public String getBlob() {
 			return blob;

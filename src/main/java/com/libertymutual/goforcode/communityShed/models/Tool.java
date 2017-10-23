@@ -197,6 +197,7 @@ public class Tool {
 		this.category = simple.getCategory();
 		this.manufacturer = simple.getManufacturer();
 		this.toolAge = simple.getToolAge();
+		this.image = simple.getImage();
 	}
 
 }
