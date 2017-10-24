@@ -52,6 +52,7 @@ public class ToolApiController {
 		return realAuthUser.getGroups()
 			.stream()
 			.flatMap(group -> group.getUsers().stream())
+			.distinct()
 			.flatMap(user -> user.getTools().stream())
 			.filter(tool -> !tool.getOwner().equals(realAuthUser))
 			.collect(Collectors.toMap(tool -> tool.getId(), tool -> tool))
