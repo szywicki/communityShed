@@ -5,13 +5,18 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.core.Authentication;
 
 import com.libertymutual.goforcode.communityShed.models.ConfirmedUser;
+import com.libertymutual.goforcode.communityShed.models.Group;
 import com.libertymutual.goforcode.communityShed.models.SimpleTool;
 import com.libertymutual.goforcode.communityShed.models.Tool;
+import com.libertymutual.goforcode.communityShed.models.User;
 import com.libertymutual.goforcode.communityShed.repositories.ConfirmedUserRepo;
 import com.libertymutual.goforcode.communityShed.repositories.GroupRepo;
 import com.libertymutual.goforcode.communityShed.repositories.InvitedUserRepo;
@@ -81,14 +86,18 @@ public class ToolApiControllerTests {
 
 		// Arrange
 		Tool tool = new Tool();
+		SimpleTool simpleTool = new SimpleTool();
+
 		when(toolRepo.save(tool)).thenReturn(tool);
+		when(toolRepo.findOne(3L)).thenReturn(tool);
+		tool.copyFromSimpleTool(simpleTool);
 		
 		// Act
 		Tool actual = controller.updateTool(simpleTool, 3l);
 		
 		// Assert
+		verify(toolRepo).findOne(3L);
 		assertThat(tool).isSameAs(actual);
-		verify(toolRepo).save(tool);
 
 	}
 	
@@ -96,7 +105,13 @@ public class ToolApiControllerTests {
 	public void test_Get_all_tools_owned_by_current_user_returns_list_of_tools() {
 
 		// Arrange
+
+//		ConfirmedUser confirmedUser = new ConfirmedUser();
+//		when(userRepo.findOne(3l)).thenReturn();
+		
 		// Act
+//		User actual = controller.getTools();
+		
 		// Assert
 		
 	}

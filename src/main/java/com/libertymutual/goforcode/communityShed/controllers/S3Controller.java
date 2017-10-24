@@ -33,12 +33,11 @@ public class S3Controller {
 		this.amazonS3Template = amazonS3Template;
 		this.bucketName = bucketName;
 		this.toolRepo = toolRepo;
-		System.out.println("S3Controller: bucket " + bucketName);
 	}
 
     @RequestMapping(value = "list", method = RequestMethod.POST)
 	public List<Resource<S3ObjectSummary>> getBucketResources() {
-		System.out.println("S3Controller: List");
+
 		ObjectListing objectListing = amazonS3Template.getAmazonS3Client()
 				.listObjects(new ListObjectsRequest().withBucketName(bucketName));
 
@@ -52,9 +51,8 @@ public class S3Controller {
 	@RequestMapping(value = "upload", method = RequestMethod.POST)
 	public @ResponseBody String handleFileUpload(
 			@RequestParam("file") MultipartFile file, @PathVariable long toolId, HttpServletResponse response) throws IOException {
-			System.out.println("S3Controller: upload start");
+
 		String name = file.getOriginalFilename();
-		System.out.println("S3Controller: filename: " + name);
 		if (!file.isEmpty()) {
 			
 			try {
@@ -64,29 +62,21 @@ public class S3Controller {
 				amazonS3Template.getAmazonS3Client()
 						.putObject(new PutObjectRequest(bucketName, name, file.getInputStream(), objectMetadata)
 								.withCannedAcl(CannedAccessControlList.PublicRead));
-				System.out.println("S3Controller: upload complete");
+
 				String imageURL = String.valueOf(amazonS3Template.getAmazonS3Client().getUrl(bucketName, name));
-				System.out.println("S3Controller: URL: " + imageURL);
-				System.out.println("S3Controller: toolId: " + toolId);
 				Tool tool = toolRepo.getOne(toolId);
-				System.out.println("S3Controller: After getOne");
 				tool.setImage(imageURL);
-				System.out.println("S3Controller: After setImage");
 				toolRepo.save(tool);
-				System.out.println("S3Controller: After DB save");
 				ObjectMapper mapper =new ObjectMapper();
 				mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-				System.out.println("S3Controller: S3 Completed");
 				return mapper.writeValueAsString(tool);
 
 			} catch (Exception e) {
 				response.sendError(503, "Cannot upload image");
-				System.out.println("S3Controller: Upload Exception" + e.getMessage());
 				return null;
 			}
 		}
 		response.sendError(504, "Empty File");
-		System.out.println("S3Controller: Upload Error EmptyFile");
 		return null;
 	}
 }
