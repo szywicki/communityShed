@@ -217,26 +217,25 @@ public class GroupApiControllerTests {
 
 	}
 
-	 @Test
-	 public void test_getGroups_returns_list_of_groups_user_is_member_of() {
-	 // Arrange
-	 HashSet<Group> groups = new HashSet<Group>();
-	 ConfirmedUser currentUser = new ConfirmedUser();
-	 Group NKOTB = new Group();
-	 currentUser.setId(1l);
-	 currentUser.addGroup(NKOTB);
-	 NKOTB.addUserToGroup(currentUser);
-	 when(confirmedUserRepo.findOne(1l)).thenReturn(currentUser);
-	 when(auth.getPrincipal()).thenReturn((User)currentUser);
-	
-	
-	 // Act
-	 Set<GroupDto> actual = controller.getGroups(auth);
-	
-	 // Assert
-	 verify(groupRepo).findOne(2l);
-	 verify(auth).getPrincipal();
-//	 assertThat(actual).contains(NKOTB);
-	
-	 }
+	@Test
+	public void test_getGroups_returns_list_of_groups_user_is_member_of() {
+		// Arrange
+		HashSet<Group> groups = new HashSet<Group>();
+		ConfirmedUser currentUser = new ConfirmedUser();
+		Group NKOTB = new Group();
+		currentUser.setId(1l);
+		currentUser.addGroup(NKOTB);
+		NKOTB.addUserToGroup(currentUser);
+		when(confirmedUserRepo.findOne(1l)).thenReturn(currentUser);
+		when(auth.getPrincipal()).thenReturn((User) currentUser);
+
+		// Act
+		Set<GroupDto> actual = controller.getGroups(auth);
+
+		// Assert
+		verify(groupRepo).findOne(2l);
+		verify(auth).getPrincipal();
+		// assertThat(actual).contains(NKOTB);
+
+	}
 }
