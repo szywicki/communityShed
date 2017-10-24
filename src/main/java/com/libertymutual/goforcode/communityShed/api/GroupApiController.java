@@ -113,9 +113,9 @@ public class GroupApiController {
 		ConfirmedUser user = (ConfirmedUser) auth.getPrincipal();
 		user = (ConfirmedUser) confirmedUserRepo.findOne(user.getId());
 		List<Tool> tools = new ArrayList<Tool>();
-        for (User users : group.getUsers()) {
-        	if (users != user) {
-            tools.addAll(users.getTools());
+        for (User u : group.getUsers()) {
+        	if (!u.equals(user)) {
+        		tools.addAll(u.getTools());
         	}
         }
         return tools;
