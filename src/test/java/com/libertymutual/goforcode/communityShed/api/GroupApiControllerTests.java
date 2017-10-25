@@ -222,10 +222,10 @@ public class GroupApiControllerTests {
 		// Arrange
 		HashSet<Group> groups = new HashSet<Group>();
 		ConfirmedUser currentUser = new ConfirmedUser();
-		Group NKOTB = new Group();
 		currentUser.setId(1l);
-		currentUser.addGroup(NKOTB);
+		Group NKOTB = new Group();
 		NKOTB.addUserToGroup(currentUser);
+		currentUser.setGroups(groups);
 		when(confirmedUserRepo.findOne(1l)).thenReturn(currentUser);
 		when(auth.getPrincipal()).thenReturn((User) currentUser);
 
@@ -233,9 +233,9 @@ public class GroupApiControllerTests {
 		Set<GroupDto> actual = controller.getGroups(auth);
 
 		// Assert
-		verify(groupRepo).findOne(2l);
+		verify(confirmedUserRepo).findOne(1l);
 		verify(auth).getPrincipal();
-		// assertThat(actual).contains(NKOTB);
+		assertThat(actual).isEqualTo(groups);
 
 	}
 }
