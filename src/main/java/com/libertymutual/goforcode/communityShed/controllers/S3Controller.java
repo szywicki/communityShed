@@ -22,20 +22,20 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping("/api/tools/{toolId}/s3")
 
-
 public class S3Controller {
 
 	private AmazonS3Template amazonS3Template;
 	private String bucketName;
 	private ToolRepo toolRepo;
 
-	public S3Controller(AmazonS3Template amazonS3Template, @Value("${amazon.s3.default-bucket}") String bucketName, ToolRepo toolRepo) {
+	public S3Controller(AmazonS3Template amazonS3Template, @Value("${amazon.s3.default-bucket}") String bucketName,
+			ToolRepo toolRepo) {
 		this.amazonS3Template = amazonS3Template;
 		this.bucketName = bucketName;
 		this.toolRepo = toolRepo;
 	}
 
-    @RequestMapping(value = "list", method = RequestMethod.POST)
+	@RequestMapping(value = "list", method = RequestMethod.POST)
 	public List<Resource<S3ObjectSummary>> getBucketResources() {
 
 		ObjectListing objectListing = amazonS3Template.getAmazonS3Client()
@@ -47,18 +47,18 @@ public class S3Controller {
 								.withRel("url")))
 				.collect(Collectors.toList());
 	}
- 
+
 	@RequestMapping(value = "upload", method = RequestMethod.POST)
-	public @ResponseBody String handleFileUpload(
-			@RequestParam("file") MultipartFile file, @PathVariable long toolId, HttpServletResponse response) throws IOException {
+	public @ResponseBody String handleFileUpload(@RequestParam("file") MultipartFile file, @PathVariable long toolId,
+			HttpServletResponse response) throws IOException {
 
 		String name = file.getOriginalFilename();
 		if (!file.isEmpty()) {
-			
+
 			try {
 				ObjectMetadata objectMetadata = new ObjectMetadata();
 				objectMetadata.setContentType(file.getContentType());
-				
+
 				amazonS3Template.getAmazonS3Client()
 						.putObject(new PutObjectRequest(bucketName, name, file.getInputStream(), objectMetadata)
 								.withCannedAcl(CannedAccessControlList.PublicRead));
@@ -67,7 +67,7 @@ public class S3Controller {
 				Tool tool = toolRepo.getOne(toolId);
 				tool.setImage(imageURL);
 				toolRepo.save(tool);
-				ObjectMapper mapper =new ObjectMapper();
+				ObjectMapper mapper = new ObjectMapper();
 				mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 				return mapper.writeValueAsString(tool);
 
@@ -80,5 +80,3 @@ public class S3Controller {
 		return null;
 	}
 }
-
-

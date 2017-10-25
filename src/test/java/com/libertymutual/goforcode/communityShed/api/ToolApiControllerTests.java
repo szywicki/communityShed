@@ -6,14 +6,17 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.security.core.Authentication;
 
 import com.libertymutual.goforcode.communityShed.models.ConfirmedUser;
 import com.libertymutual.goforcode.communityShed.models.Group;
+import com.libertymutual.goforcode.communityShed.models.Request;
 import com.libertymutual.goforcode.communityShed.models.SimpleTool;
 import com.libertymutual.goforcode.communityShed.models.Tool;
 import com.libertymutual.goforcode.communityShed.models.User;
@@ -35,32 +38,31 @@ public class ToolApiControllerTests {
 
 	@Before
 	public void setUp() {
-	toolRepo = mock(ToolRepo.class);
-	mock(GroupRepo.class);
-	mock(UserRepo.class);
-	confirmedUserRepo = mock(ConfirmedUserRepo.class);
-	mock(InvitedUserRepo.class);
-    auth = mock(Authentication.class);
-	controller = new ToolApiController(toolRepo, requestRepo, confirmedUserRepo);
+		toolRepo = mock(ToolRepo.class);
+		mock(GroupRepo.class);
+		mock(UserRepo.class);
+		confirmedUserRepo = mock(ConfirmedUserRepo.class);
+		mock(InvitedUserRepo.class);
+		auth = mock(Authentication.class);
+		controller = new ToolApiController(toolRepo, requestRepo, confirmedUserRepo);
 	}
-	
-	
+
 	@Test
 	public void test_get_one_tool_by_id() throws StuffNotFoundException {
 
 		// Arrange
 		Tool toool = new Tool();
 		when(toolRepo.findOne(2l)).thenReturn(toool);
-		
+
 		// Act
 		Tool actual = controller.getOneTool(2l);
-		
+
 		// Assert
 		assertThat(actual).isSameAs(toool);
 		verify(toolRepo).findOne(2l);
-		
+
 	}
-	
+
 	@Test
 	public void test_createTool_saves_and_returns_tool() {
 
@@ -74,74 +76,101 @@ public class ToolApiControllerTests {
 
 		// Act
 		Tool actual = controller.createTool(auth, simpleTool);
-		
+
 		// Assert
 		verify(toolRepo).save(tool);
 		assertThat(tool).isSameAs(actual);
-		
+
 	}
-	
+
 	@Test
 	public void test_Update_a_Tool_saves_and_returns_tool() {
 
 		// Arrange
 		Tool tool = new Tool();
 		SimpleTool simpleTool = new SimpleTool();
-
-		when(toolRepo.save(tool)).thenReturn(tool);
 		when(toolRepo.findOne(3L)).thenReturn(tool);
+
 		tool.copyFromSimpleTool(simpleTool);
-		
+
 		// Act
 		Tool actual = controller.updateTool(simpleTool, 3l);
-		
+
 		// Assert
 		verify(toolRepo).findOne(3L);
 		assertThat(tool).isSameAs(actual);
 
 	}
-	
+
 	@Test
 	public void test_Get_all_tools_owned_by_current_user_returns_list_of_tools() {
 
 		// Arrange
 
-//		ConfirmedUser confirmedUser = new ConfirmedUser();
-//		when(userRepo.findOne(3l)).thenReturn();
-		
+		// ConfirmedUser confirmedUser = new ConfirmedUser();
+		// when(userRepo.findOne(3l)).thenReturn();
+
 		// Act
-//		User actual = controller.getTools();
-		
+		// User actual = controller.getTools();
+
 		// Assert
-		
+
 	}
-	
+
 	@Test
-	public void test_Get_allTools_of_allUsers_for_allGroups_current_user_is_in_returns_list_of_tools () {
-		
+	public void test_Get_allTools_of_allUsers_for_allGroups_current_user_is_in_returns_list_of_tools() {
+
 		// Arrange
 		// Act
 		// Assert
-		
+
 	}
-	
+
 	@Test
-	public void test_Enable_a_Tool_returns_enabled_Tool () {
-		
+	public void test_Enable_a_Tool_returns_enabled_Tool() {
+
 		// Arrange
+		Tool tool = new Tool();
+		SimpleTool simpleTool = new SimpleTool();
+		when(toolRepo.findOne(3L)).thenReturn(tool);
+		tool.copyFromSimpleTool(simpleTool);
+
 		// Act
+		Tool actual = controller.enableTool(3l);
+
 		// Assert
-		
+		verify(toolRepo).findOne(3L);
+		assertThat(tool).isSameAs(actual);
+
 	}
-	
+
+	@SuppressWarnings("null")
 	@Test
-	public void test_Disable_a_Tool_returns_disabled_Tool () {
-		
+	public void test_Disable_a_Tool_returns_disabled_Tool_And_Denies_Pending_Requests() {
+
 		// Arrange
+		Tool tool = new Tool();
+		tool.setStatus("Enabled");
+		Request request = new Request();
+		request.setStatus("Enabled");
+		List<Request> requests = null;
+		requests.add(request);
+		tool.setRequests(requests);
+		when(toolRepo.findOne(3L)).thenReturn(tool);
+		when(tool.getRequests()).thenReturn(requests);
+
 		// Act
+		Tool actual = controller.disableTool(3l);
+		requestRepo.save(requests);
+		toolRepo.save(tool);
+
 		// Assert
-		
+		verify(toolRepo).findOne(3L);
+		assertThat(tool).isSameAs(actual);
+		assertThat(tool.getStatus().equals("Disabled"));
+		for (Request myrequest : tool.getRequests()) {
+			assertThat(myrequest.getStatus().equals("Denied"));
+		}
+
 	}
 }
-
-
