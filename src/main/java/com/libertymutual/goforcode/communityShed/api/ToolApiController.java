@@ -1,6 +1,5 @@
 package com.libertymutual.goforcode.communityShed.api;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,7 +19,6 @@ import com.libertymutual.goforcode.communityShed.models.Group;
 import com.libertymutual.goforcode.communityShed.models.Request;
 import com.libertymutual.goforcode.communityShed.models.SimpleTool;
 import com.libertymutual.goforcode.communityShed.models.Tool;
-import com.libertymutual.goforcode.communityShed.models.User;
 import com.libertymutual.goforcode.communityShed.repositories.RequestRepo;
 import com.libertymutual.goforcode.communityShed.repositories.ToolRepo;
 import com.libertymutual.goforcode.communityShed.repositories.ConfirmedUserRepo;
@@ -35,12 +33,12 @@ public class ToolApiController {
 	private ToolRepo toolRepo;
 	private RequestRepo requestRepo;
 	private ConfirmedUserRepo confirmedUserRepo;
-	
+
 	public ToolApiController(ToolRepo toolRepo, RequestRepo requestRepo, ConfirmedUserRepo confirmedUserRepo) {
 		this.toolRepo = toolRepo;
 		this.requestRepo = requestRepo;
 		this.confirmedUserRepo = confirmedUserRepo;
-		
+
 	}
 
 	@ApiOperation("Get all Tools of all users for all groups that the current user is in")
@@ -48,17 +46,11 @@ public class ToolApiController {
 	public Collection<Tool> getAllTools(Authentication auth) {
 		ConfirmedUser authUser = (ConfirmedUser) auth.getPrincipal();
 		final ConfirmedUser realAuthUser = (ConfirmedUser) confirmedUserRepo.findOne(authUser.getId());
-		
-		return realAuthUser.getGroups()
-			.stream()
-			.flatMap(group -> group.getUsers().stream())
-			.distinct()
-			.flatMap(user -> user.getTools().stream())
-			.filter(tool -> !tool.getOwner().equals(realAuthUser))
-			.collect(Collectors.toMap(tool -> tool.getId(), tool -> tool))
-			.values();
+
+		return realAuthUser.getGroups().stream().flatMap(group -> group.getUsers().stream()).distinct()
+				.flatMap(user -> user.getTools().stream()).filter(tool -> !tool.getOwner().equals(realAuthUser))
+				.collect(Collectors.toMap(tool -> tool.getId(), tool -> tool)).values();
 	}
-	
 
 	@ApiOperation("Get all tools that are owned by the current user")
 	@GetMapping("mine")
@@ -100,8 +92,8 @@ public class ToolApiController {
 		Tool tool = toolRepo.findOne(id);
 		tool.setStatus("Disabled");
 		List<Request> requests = tool.getRequests();
-		for (Request request : requests)	{
-			if(request.getStatus().equals("Pending")) {
+		for (Request request : requests) {
+			if (request.getStatus().equals("Pending")) {
 				request.setStatus("Denied");
 			}
 		}
@@ -109,10 +101,10 @@ public class ToolApiController {
 		toolRepo.save(tool);
 		return tool;
 	}
-	
+
 	@ApiOperation("Enable a Tool")
 	@PutMapping("{id}/enable")
-	public Tool enableTool(@PathVariable long id)	{
+	public Tool enableTool(@PathVariable long id) {
 		// enable tool
 		Tool tool = toolRepo.findOne(id);
 		tool.setStatus("Available");

@@ -24,54 +24,57 @@ import com.libertymutual.goforcode.communityShed.services.ShedUserDetailsService
 @RequestMapping("/api/sessions")
 @CrossOrigin(origins = "*")
 
-
 public class SessionApiController {
-	
+
 	private ConfirmedUserRepo confirmedUserRepo;
-	
+
 	private ShedUserDetailsService userDetails;
 	private AuthenticationManager authManager;
-		
-	public SessionApiController(ShedUserDetailsService userDetails, AuthenticationManager authManager, ConfirmedUserRepo confirmedUserRepo)	{
+
+	public SessionApiController(ShedUserDetailsService userDetails, AuthenticationManager authManager,
+			ConfirmedUserRepo confirmedUserRepo) {
 		this.userDetails = userDetails;
 		this.authManager = authManager;
 		this.confirmedUserRepo = confirmedUserRepo;
-		
+
 	}
-	
+
 	@PutMapping("/mine")
-	public User login(@RequestBody Credentials credentials)	{
-			UserDetails details = userDetails.loadUserByUsername(credentials.getEmail());
-			
-			UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(details, credentials.getPassword(), details.getAuthorities());
-			authManager.authenticate(token);
-			if (token.isAuthenticated()) {
-	            SecurityContextHolder.getContext().setAuthentication(token);
-	    		return confirmedUserRepo.findByEmail(credentials.getEmail());
-	        }
-			return null;
+	public User login(@RequestBody Credentials credentials) {
+		UserDetails details = userDetails.loadUserByUsername(credentials.getEmail());
+
+		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(details,
+				credentials.getPassword(), details.getAuthorities());
+		authManager.authenticate(token);
+		if (token.isAuthenticated()) {
+			SecurityContextHolder.getContext().setAuthentication(token);
+			return confirmedUserRepo.findByEmail(credentials.getEmail());
+		}
+		return null;
 	}
-		
-	
+
 	@DeleteMapping("/mine")
-	public Boolean logout(Authentication auth, HttpServletRequest request, HttpServletResponse response)	{
+	public Boolean logout(Authentication auth, HttpServletRequest request, HttpServletResponse response) {
 		new SecurityContextLogoutHandler().logout(request, response, auth);
 		return true;
 	}
-	
+
 	static class Credentials {
 		private String email;
 		private String password;
-		
+
 		public String getEmail() {
 			return email;
 		}
+
 		public void setEmail(String email) {
 			this.email = email;
 		}
+
 		public String getPassword() {
 			return password;
 		}
+
 		public void setPassword(String password) {
 			this.password = password;
 		}

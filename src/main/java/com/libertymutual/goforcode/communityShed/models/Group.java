@@ -1,10 +1,7 @@
 package com.libertymutual.goforcode.communityShed.models;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -61,7 +58,7 @@ public class Group {
 			users = new HashSet<User>();
 		}
 		users.add(user);
-		
+
 	}
 
 	public void removeUserFromGroup(User user) {

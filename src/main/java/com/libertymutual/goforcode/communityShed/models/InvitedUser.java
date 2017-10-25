@@ -14,19 +14,17 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.libertymutual.goforcode.communityShed.services.MailGunEmailService;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
-@JsonIdentityInfo(
-		generator = ObjectIdGenerators.PropertyGenerator.class, 
-		property = "id"
-)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
-public class InvitedUser extends User{
+public class InvitedUser extends User {
 
 	private static final long serialVersionUID = 1L;
 
-	@Column(unique=true)
+	@Column(unique = true)
 	private UUID invitationKey = UUID.randomUUID();
-	
-	public InvitedUser() {}
+
+	public InvitedUser() {
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -75,20 +73,19 @@ public class InvitedUser extends User{
 	public void setInvitationKey(UUID invitationKey) {
 		this.invitationKey = invitationKey;
 	}
-	
+
 	@Override
 	public void inviteToGroup(Group group, MailGunEmailService emailer) {
-		String html = 	"<html><body>"
-						+ "<div><h3>Your friend has invited you to join the Community Shed group " + group.getGroupName()+ ".</h3>"
-						+ "<br>Click <a href=\"https://community-shed.herokuapp.com/invite/" + invitationKey + "\">this</a> link to create an account and start sharing!</div>"
-						+ "</body></html>";
+		String html = "<html><body>" + "<div><h3>Your friend has invited you to join the Community Shed group "
+				+ group.getGroupName() + ".</h3>" + "<br>Click <a href=\"https://community-shed.herokuapp.com/invite/"
+				+ invitationKey + "\">this</a> link to create an account and start sharing!</div>" + "</body></html>";
 		try {
-			emailer.sendSimpleMessage(super.getEmail(), "You've been invited to the Community Shed group: " + group.getGroupName(), html);
+			emailer.sendSimpleMessage(super.getEmail(),
+					"You've been invited to the Community Shed group: " + group.getGroupName(), html);
 		} catch (UnirestException e) {
-			System.out.println("Invitation email failed");
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 }

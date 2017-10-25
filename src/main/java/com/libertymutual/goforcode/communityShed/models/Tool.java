@@ -20,10 +20,9 @@ import org.hibernate.annotations.LazyCollectionOption;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
-@Table(name="communityshed_tool")
+@Table(name = "communityshed_tool")
 
 public class Tool {
 	@Id
@@ -31,7 +30,6 @@ public class Tool {
 	@SequenceGenerator(name = "ToolIdSeq", sequenceName = "ToolIdSeq")
 	private Long id;
 
-	
 	@Column(nullable = false, length = 50)
 	private String toolName;
 
@@ -40,37 +38,41 @@ public class Tool {
 
 	@Column(nullable = true, length = 30)
 	private String category;
-	
+
 	@Column(nullable = true, length = 30)
 	private String manufacturer;
 
-	//Checkout and return are really attributes of request.  Should we store dataAvailable here and populate it with the next date the item is available for checkout?
+	// Checkout and return are really attributes of request. Should we store
+	// dataAvailable here and populate it with the next date the item is available
+	// for checkout?
 	@Column(nullable = true)
 	private Date dateCheckout;
-	
+
 	@Column(nullable = true)
 	private Date dateReturn;
-	
+
 	@Column(nullable = true, length = 30)
 	private String status;
-	
+
 	@Column(nullable = true)
 	private int toolAge;
-	
+
 	@Column(nullable = true)
 	private String image;
-	
+
 	@ManyToOne
 	private ConfirmedUser owner;
-	
-	@OneToMany(mappedBy="tool", cascade=CascadeType.ALL)
+
+	@OneToMany(mappedBy = "tool", cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Request> requests;
 
-	public Tool() {}
+	public Tool() {
+	}
 
-	public Tool(String toolName, String toolDescription, String category, String manufacturer, Date dateCheckout, Date dateReturn, String status, int toolAge, String image, ConfirmedUser owner) {
-		
+	public Tool(String toolName, String toolDescription, String category, String manufacturer, Date dateCheckout,
+			Date dateReturn, String status, int toolAge, String image, ConfirmedUser owner) {
+
 		this.toolName = toolName;
 		this.toolDescription = toolDescription;
 		this.category = category;
@@ -80,7 +82,7 @@ public class Tool {
 		this.status = status;
 		this.toolAge = toolAge;
 		this.image = image;
-		this.owner = owner; 
+		this.owner = owner;
 
 	}
 
@@ -190,8 +192,8 @@ public class Tool {
 	public void setRequests(List<Request> requests) {
 		this.requests = requests;
 	}
-	
-	public void copyFromSimpleTool(SimpleTool simple)	{
+
+	public void copyFromSimpleTool(SimpleTool simple) {
 		this.toolName = simple.getToolName();
 		this.toolDescription = simple.getToolDescription();
 		this.category = simple.getCategory();

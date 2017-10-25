@@ -17,16 +17,16 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/api/products")
 public class ProductApiController {
-	
+
 	private SemanticsProductService productService;
-	
-	public ProductApiController(SemanticsProductService productService)	{
+
+	public ProductApiController(SemanticsProductService productService) {
 		this.productService = productService;
 	}
-	
+
 	@ApiOperation("Get list of products returned from Semantic3 service using offset value for mock pagination")
 	@GetMapping("{searchString}")
-	public List<SemanticsProduct> getProducts(@PathVariable String searchString) throws UnsupportedEncodingException	{
+	public List<SemanticsProduct> getProducts(@PathVariable String searchString) throws UnsupportedEncodingException {
 		searchString = URLDecoder.decode(searchString, "UTF-8");
 		return productService.getProducts(searchString);
 	}

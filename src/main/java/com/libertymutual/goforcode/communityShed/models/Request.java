@@ -16,36 +16,38 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 public class Request {
-	
+
 	@Id
 	@GeneratedValue(generator = "RequestIdSeq", strategy = GenerationType.AUTO)
 	@SequenceGenerator(name = "RequestIdSeq", sequenceName = "RequestIdSeq")
 	private Long id;
-	
-	@Column(nullable=false)
+
+	@Column(nullable = false)
 	private Date loanStartDate;
-	
-	@Column(nullable=false)
+
+	@Column(nullable = false)
 	private Date loanEndDate;
-	
+
 	@Column
 	private String description;
-	
-	@Column(nullable=false)
+
+	@Column(nullable = false)
 	private String status;
-	
+
 	@ManyToOne
 	private Tool tool;
-	
+
 	@ManyToOne
 	private ConfirmedUser borrower;
-	
+
 	@ManyToOne
 	private ConfirmedUser loaner;
-	
-	public Request() {}
-	
-	public Request(Date loanStartDate, Date loanEndDate, String description, String status, Tool tool, ConfirmedUser borrower, ConfirmedUser loaner) {
+
+	public Request() {
+	}
+
+	public Request(Date loanStartDate, Date loanEndDate, String description, String status, Tool tool,
+			ConfirmedUser borrower, ConfirmedUser loaner) {
 		this.loanStartDate = loanStartDate;
 		this.loanEndDate = loanEndDate;
 		this.description = description;
@@ -118,14 +120,14 @@ public class Request {
 	public void setLoaner(ConfirmedUser loaner) {
 		this.loaner = loaner;
 	}
-	
-	public String getLoanStartDateForBrowser()	{
+
+	public String getLoanStartDateForBrowser() {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		return formatter.format(loanStartDate);
 	}
-	
+
 	public void notifyLoaner(ConfirmedUser loaner) {
-	
+
 		this.loaner = loaner;
 	}
 }

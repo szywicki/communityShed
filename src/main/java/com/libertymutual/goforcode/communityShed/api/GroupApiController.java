@@ -24,58 +24,50 @@ import com.libertymutual.goforcode.communityShed.repositories.ConfirmedUserRepo;
 import com.libertymutual.goforcode.communityShed.repositories.GroupRepo;
 import io.swagger.annotations.ApiOperation;
 
-
 @RestController
 @RequestMapping("/api/groups")
 
-
 public class GroupApiController {
-	
+
 	private GroupRepo groupRepo;
 	private ConfirmedUserRepo confirmedUserRepo;
-	
-	public GroupApiController (GroupRepo groupRepo, ConfirmedUserRepo confirmedUserRepo) {
+
+	public GroupApiController(GroupRepo groupRepo, ConfirmedUserRepo confirmedUserRepo) {
 		this.groupRepo = groupRepo;
 		this.confirmedUserRepo = confirmedUserRepo;
 	}
-		
-	
+
 	@ApiOperation("Get one Group by Id")
 	@GetMapping("{groupId}")
 	public Group getOneGroup(@PathVariable long groupId) {
-		return groupRepo.findOne(groupId); 
-	}	
+		return groupRepo.findOne(groupId);
+	}
 
-	
 	@ApiOperation("Create a Group")
 	@PostMapping("")
-	public Group createGroup(@RequestBody Group group, Authentication auth ) {
+	public Group createGroup(@RequestBody Group group, Authentication auth) {
 		User currentUser = (User) auth.getPrincipal();
-		group.addUserToGroup(currentUser);	
+		group.addUserToGroup(currentUser);
 		group = groupRepo.save(group);
 		return group;
 	}
-		
-	
+
 	@ApiOperation("Get list of users in that group")
 	@GetMapping("{groupId}/users")
 	public Set<User> getUsers(@PathVariable long groupId) {
 		Group group = groupRepo.findOne(groupId);
 		return group.getUsers();
 	}
-	
-	// Methods added for invitation handling. 
+
+	// Methods added for invitation handling.
 	@ApiOperation("Gets list of pendingGroup invites for the logged in user.")
 	@GetMapping("pendingInvites")
 	public List<PendingGroupDto> getPendingGroups(Authentication auth) {
 		ConfirmedUser user = (ConfirmedUser) auth.getPrincipal();
 		user = (ConfirmedUser) confirmedUserRepo.findOne(user.getId());
-		return user.getPendingGroups()
-				.stream()
-				.map(group -> new PendingGroupDto(group))
-				.collect(Collectors.toList());
+		return user.getPendingGroups().stream().map(group -> new PendingGroupDto(group)).collect(Collectors.toList());
 	}
-	
+
 	@ApiOperation("Remove the user from the pending invite table into the group member table.")
 	@PutMapping("{groupId}/user/accept")
 	public Set<GroupDto> acceptInvite(@PathVariable long groupId, Authentication auth) {
@@ -85,12 +77,9 @@ public class GroupApiController {
 		group.addUserToGroup(user);
 		groupRepo.save(group);
 		user.addGroup(group);
-		return user.getGroups()
-				.stream()
-				.map(g -> new GroupDto(g))
-				.collect(Collectors.toSet());
+		return user.getGroups().stream().map(g -> new GroupDto(g)).collect(Collectors.toSet());
 	}
-	
+
 	@ApiOperation("remove the user from the pending relationship table.")
 	@PutMapping("{groupId}/user/deny")
 	public Set<GroupDto> denyInvite(@PathVariable long groupId, Authentication auth) {
@@ -99,13 +88,9 @@ public class GroupApiController {
 		group.removePendingUserFromGroup(user);
 		groupRepo.save(group);
 		user = (ConfirmedUser) confirmedUserRepo.findOne(user.getId());
-		return user.getGroups()
-				.stream()
-				.map(g -> new GroupDto(g))
-				.collect(Collectors.toSet());
+		return user.getGroups().stream().map(g -> new GroupDto(g)).collect(Collectors.toSet());
 	}
-	
-	
+
 	@ApiOperation("Get list of tools owned by that group")
 	@GetMapping("{groupId}/tools")
 	public List<Tool> getTools(@PathVariable long groupId, Authentication auth) {
@@ -113,24 +98,20 @@ public class GroupApiController {
 		ConfirmedUser user = (ConfirmedUser) auth.getPrincipal();
 		user = (ConfirmedUser) confirmedUserRepo.findOne(user.getId());
 		List<Tool> tools = new ArrayList<Tool>();
-        for (User u : group.getUsers()) {
-        	if (!u.equals(user)) {
-        		tools.addAll(u.getTools());
-        	}
-        }
-        return tools;
+		for (User u : group.getUsers()) {
+			if (!u.equals(user)) {
+				tools.addAll(u.getTools());
+			}
+		}
+		return tools;
 	}
-	
-	
+
 	@ApiOperation("Gets list of groups that user is a member of.")
 	@GetMapping("")
 	public Set<GroupDto> getGroups(Authentication auth) {
 		ConfirmedUser user = (ConfirmedUser) auth.getPrincipal();
 		user = (ConfirmedUser) confirmedUserRepo.findOne(user.getId());
-		return user.getGroups()
-				.stream()
-				.map(group -> new GroupDto(group))
-				.collect(Collectors.toSet());
+		return user.getGroups().stream().map(group -> new GroupDto(group)).collect(Collectors.toSet());
 	}
-	
+
 }

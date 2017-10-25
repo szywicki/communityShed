@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.libertymutual.goforcode.communityShed.models.ConfirmedUser;
 import com.libertymutual.goforcode.communityShed.repositories.ConfirmedUserRepo;
-import com.libertymutual.goforcode.communityShed.repositories.UserRepo;
 import com.libertymutual.goforcode.communityShed.services.ShedUserDetailsService;
 
 import io.swagger.annotations.ApiOperation;
@@ -23,12 +22,11 @@ public class UserApiController {
 
 	private ShedUserDetailsService userDetails;
 	private PasswordEncoder encoder;
-	private UserRepo userRepo;
 	private ConfirmedUserRepo confirmedUserRepo;
 
-	public UserApiController(PasswordEncoder encoder, UserRepo userRepo, ConfirmedUserRepo confirmedUserRepo, ShedUserDetailsService userDetails) {
+	public UserApiController(PasswordEncoder encoder, ConfirmedUserRepo confirmedUserRepo,
+			ShedUserDetailsService userDetails) {
 		this.encoder = encoder;
-		this.userRepo = userRepo;
 		this.userDetails = userDetails;
 		this.confirmedUserRepo = confirmedUserRepo;
 
@@ -44,7 +42,8 @@ public class UserApiController {
 		user.setPassword(encoder.encode(user.getPassword()));
 		user = confirmedUserRepo.save(user);
 		UserDetails details = userDetails.loadUserByUsername(user.getEmail());
-		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(details, user.getPassword(), details.getAuthorities());
+		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(details, user.getPassword(),
+				details.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(token);
 		return user;
 	}

@@ -35,7 +35,7 @@ import io.swagger.annotations.ApiOperation;
 @CrossOrigin(origins = "*")
 
 public class InviteApiController {
-	
+
 	private UserRepo userRepo;
 	private GroupRepo groupRepo;
 	private ConfirmedUserRepo confirmedUserRepo;
@@ -44,8 +44,10 @@ public class InviteApiController {
 	private ShedUserDetailsService userDetails;
 	private ConfirmedUserService cus;
 	private InvitationService inviteService;
-	
-	public InviteApiController(UserRepo userRepo, GroupRepo groupRepo, ConfirmedUserRepo confirmedUserRepo, InvitedUserRepo invitedUserRepo, PasswordEncoder encoder, ShedUserDetailsService userDetails, ConfirmedUserService cus, InvitationService inviteService) {
+
+	public InviteApiController(UserRepo userRepo, GroupRepo groupRepo, ConfirmedUserRepo confirmedUserRepo,
+			InvitedUserRepo invitedUserRepo, PasswordEncoder encoder, ShedUserDetailsService userDetails,
+			ConfirmedUserService cus, InvitationService inviteService) {
 		this.userRepo = userRepo;
 		this.groupRepo = groupRepo;
 		this.confirmedUserRepo = confirmedUserRepo;
@@ -55,23 +57,25 @@ public class InviteApiController {
 		this.cus = cus;
 		this.inviteService = inviteService;
 	}
-	
+
 	@ApiOperation("Return user details for an invite")
 	@GetMapping("{inviteKey}")
-	public InvitedUser getUserFromInvite(@PathVariable UUID inviteKey)	{
+	public InvitedUser getUserFromInvite(@PathVariable UUID inviteKey) {
 		return invitedUserRepo.findByInvitationKey(inviteKey);
 	}
-	
+
 	@ApiOperation("Convert InvitedUser into a ConfirmedUser")
 	@PostMapping("{inviteKey}")
-	public ConfirmedUser convertInvitedUserAndLogin(@RequestBody ConfirmedUser user, @PathVariable UUID inviteKey, HttpServletResponse response)	{
+	public ConfirmedUser convertInvitedUserAndLogin(@RequestBody ConfirmedUser user, @PathVariable UUID inviteKey,
+			HttpServletResponse response) {
 		InvitedUser invited = invitedUserRepo.findByInvitationKey(inviteKey);
 		user.setPassword(encoder.encode(user.getPassword()));
 		user = cus.convertInvitedUserToConfirmedUser(user, invited);
-		if (null != user)	{
-			//Authenticate user
+		if (null != user) {
+			// Authenticate user
 			UserDetails details = userDetails.loadUserByUsername(user.getEmail());
-			UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(details, user.getPassword(), details.getAuthorities());
+			UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(details,
+					user.getPassword(), details.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(token);
 			response.setStatus(200);
 			return user;
@@ -79,25 +83,26 @@ public class InviteApiController {
 		response.setStatus(403);
 		return null;
 	}
-	
+
 	@ApiOperation("Generate invite to a group")
 	@PostMapping("group/{groupId}")
-	public Boolean	inviteUser(Authentication auth, @RequestBody inviteEmail inviteEmail, @PathVariable long groupId, HttpServletResponse response)	{
-		//get session user
+	public Boolean inviteUser(Authentication auth, @RequestBody inviteEmail inviteEmail, @PathVariable long groupId,
+			HttpServletResponse response) {
+		// get session user
 		ConfirmedUser authUser = (ConfirmedUser) auth.getPrincipal();
 		authUser = (ConfirmedUser) confirmedUserRepo.findOne(authUser.getId());
-		//get invited user by submitted email address
+		// get invited user by submitted email address
 		User existingUser = userRepo.findByEmail(inviteEmail.getEmail());
 		Group group = groupRepo.findOne(groupId);
 		Boolean invitationSent = inviteService.sendInvitation(authUser, existingUser, group, inviteEmail.getEmail());
-		if(invitationSent == false)	{
+		if (invitationSent == false) {
 			response.setStatus(403);
 			return false;
 		}
 		return true;
 	}
-	
-	static class inviteEmail	{
+
+	static class inviteEmail {
 		private String email;
 
 		public String getEmail() {

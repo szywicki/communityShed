@@ -17,35 +17,36 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 
 @Entity
 public class ConfirmedUser extends User {
-	
+
 	private static final long serialVersionUID = 1L;
 
-	@Column(length=75)
+	@Column(length = 75)
 	private String firstName;
-		
-	@Column(length=75)
+
+	@Column(length = 75)
 	private String lastName;
 
-	@Column(length=255)
+	@Column(length = 255)
 	private String password;
 
 	@JsonIgnore
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(mappedBy="owner", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
 	private List<Tool> tools;
-	
+
 	@JsonIgnore
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(mappedBy="borrower", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy = "borrower", cascade = CascadeType.ALL)
 	private List<Request> requestsMade;
-	
+
 	@JsonIgnore
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(mappedBy="loaner", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy = "loaner", cascade = CascadeType.ALL)
 	private List<Request> requestsReceived;
 
-	public ConfirmedUser() {}
-	
+	public ConfirmedUser() {
+	}
+
 	public ConfirmedUser(String password, String email, String firstName, String lastName) {
 		super(email);
 		this.password = password;
@@ -140,7 +141,7 @@ public class ConfirmedUser extends User {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		if (getId() == null) {
@@ -148,21 +149,20 @@ public class ConfirmedUser extends User {
 		}
 		return getId().hashCode();
 	}
-	
+
 	@Override
-	public void inviteToGroup(Group group, MailGunEmailService emailer)	{
-		String html = 	"<html><body>"
-						+ "<div><h3>Your friend has invited you to join the Community Shed group " + group.getGroupName()+ ".</h3>"
-						+ "<br>Click <a href=\"https://community-shed.herokuapp.com\">this</a> link to login to your account and review your pending invitation on the My Groups page!</div>"
-						+ "</body></html>";
-		
+	public void inviteToGroup(Group group, MailGunEmailService emailer) {
+		String html = "<html><body>" + "<div><h3>Your friend has invited you to join the Community Shed group "
+				+ group.getGroupName() + ".</h3>"
+				+ "<br>Click <a href=\"https://community-shed.herokuapp.com\">this</a> link to login to your account and review your pending invitation on the My Groups page!</div>"
+				+ "</body></html>";
+
 		try {
-			emailer.sendSimpleMessage(super.getEmail(), "You've been invited to the CommunityShed group: " + group.getGroupName(), html);
+			emailer.sendSimpleMessage(super.getEmail(),
+					"You've been invited to the CommunityShed group: " + group.getGroupName(), html);
 		} catch (UnirestException e) {
-			System.out.println("Invitation email failed");
 			e.printStackTrace();
 		}
 	}
-	
-}
 
+}
