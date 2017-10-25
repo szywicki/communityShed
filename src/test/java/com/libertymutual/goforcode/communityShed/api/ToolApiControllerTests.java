@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -63,25 +64,6 @@ public class ToolApiControllerTests {
 
 	}
 
-	@Test
-	public void test_createTool_saves_and_returns_tool() {
-
-		// Arrange
-		Tool tool = new Tool();
-		SimpleTool simpleTool = new SimpleTool();
-		tool.copyFromSimpleTool(simpleTool);
-		tool.setOwner((ConfirmedUser) auth.getPrincipal());
-		tool.setStatus("Available");
-		when(toolRepo.save(tool)).thenReturn(tool);
-
-		// Act
-		Tool actual = controller.createTool(auth, simpleTool);
-
-		// Assert
-		verify(toolRepo).save(tool);
-		assertThat(tool).isSameAs(actual);
-
-	}
 
 	@Test
 	public void test_Update_a_Tool_saves_and_returns_tool() {
@@ -89,7 +71,8 @@ public class ToolApiControllerTests {
 		// Arrange
 		Tool tool = new Tool();
 		SimpleTool simpleTool = new SimpleTool();
-		when(toolRepo.findOne(3L)).thenReturn(tool);
+		when(toolRepo.save(tool)).thenReturn(tool);
+		when(toolRepo.findOne(3l)).thenReturn(tool);
 
 		tool.copyFromSimpleTool(simpleTool);
 
@@ -97,7 +80,7 @@ public class ToolApiControllerTests {
 		Tool actual = controller.updateTool(simpleTool, 3l);
 
 		// Assert
-		verify(toolRepo).findOne(3L);
+		verify(toolRepo).findOne(3l);
 		assertThat(tool).isSameAs(actual);
 
 	}
@@ -141,36 +124,6 @@ public class ToolApiControllerTests {
 		// Assert
 		verify(toolRepo).findOne(3L);
 		assertThat(tool).isSameAs(actual);
-
-	}
-
-	@SuppressWarnings("null")
-	@Test
-	public void test_Disable_a_Tool_returns_disabled_Tool_And_Denies_Pending_Requests() {
-
-		// Arrange
-		Tool tool = new Tool();
-		tool.setStatus("Enabled");
-		Request request = new Request();
-		request.setStatus("Enabled");
-		List<Request> requests = null;
-		requests.add(request);
-		tool.setRequests(requests);
-		when(toolRepo.findOne(3L)).thenReturn(tool);
-		when(tool.getRequests()).thenReturn(requests);
-
-		// Act
-		Tool actual = controller.disableTool(3l);
-		requestRepo.save(requests);
-		toolRepo.save(tool);
-
-		// Assert
-		verify(toolRepo).findOne(3L);
-		assertThat(tool).isSameAs(actual);
-		assertThat(tool.getStatus().equals("Disabled"));
-		for (Request myrequest : tool.getRequests()) {
-			assertThat(myrequest.getStatus().equals("Denied"));
-		}
 
 	}
 }
