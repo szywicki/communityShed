@@ -78,9 +78,12 @@ public class InvitedUser extends User{
 	
 	@Override
 	public void inviteToGroup(Group group, MailGunEmailService emailer) {
-		String html = "<html>Here's the invite email message for a new user.  Click <a href=\"https://community-shed.herokuapp.com/invite/" + invitationKey + "\">this</a> link to create an account and accept the invitation.</html>";
+		String html = 	"<html><body>"
+						+ "<div><h3>Your friend has invited you to join the Community Shed group " + group.getGroupName()+ ".</h3>"
+						+ "<br>Click <a href=\"https://community-shed.herokuapp.com/invite/" + invitationKey + "\">this</a> link to create an account and start sharing!</div>"
+						+ "</body></html>";
 		try {
-			emailer.sendSimpleMessage(super.getEmail(), "You've been invited to the CommunityShed group: " + group.getGroupName(), html);
+			emailer.sendSimpleMessage(super.getEmail(), "You've been invited to the Community Shed group: " + group.getGroupName(), html);
 		} catch (UnirestException e) {
 			System.out.println("Invitation email failed");
 			e.printStackTrace();
