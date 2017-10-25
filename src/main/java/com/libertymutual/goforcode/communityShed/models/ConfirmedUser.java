@@ -151,7 +151,11 @@ public class ConfirmedUser extends User {
 	
 	@Override
 	public void inviteToGroup(Group group, MailGunEmailService emailer)	{
-		String html = "<html>Here's the invite email message for an existing user.  Click <a href=\"https://community-shed.herokuapp.com/mygroups\">this</a> link to access your groups and accept or deny the invitation.</html>";
+		String html = 	"<html><body>"
+						+ "<div><h3>Your friend has invited you to join the Community Shed group " + group.getGroupName()+ ".</h3>"
+						+ "<br>Click <a href=\"https://community-shed.herokuapp.com\">this</a> link to login to your account and review your pending invitation on the My Groups page!</div>"
+						+ "</body></html>";
+		
 		try {
 			emailer.sendSimpleMessage(super.getEmail(), "You've been invited to the CommunityShed group: " + group.getGroupName(), html);
 		} catch (UnirestException e) {

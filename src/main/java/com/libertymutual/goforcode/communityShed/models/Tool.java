@@ -32,10 +32,10 @@ public class Tool {
 	private Long id;
 
 	
-	@Column(nullable = false, length = 30)
+	@Column(nullable = false, length = 50)
 	private String toolName;
 
-	@Column(nullable = false, length = 80)
+	@Column(nullable = false, length = 255)
 	private String toolDescription;
 
 	@Column(nullable = true, length = 30)

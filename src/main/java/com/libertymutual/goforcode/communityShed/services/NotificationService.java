@@ -17,8 +17,11 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 		}
 		
 		public void notifyToolOwner(String emailAddress, String toolName, String borrowerName)	{
-			subject = "Notification of a request message for tool owner";
-			html = 	"<html>You've received a request from " + borrowerName + " to borrow your: " + toolName + "</html>";
+			subject = borrowerName + " has requested to borrow your tool: " + toolName;
+			html = 	"<html>"
+					+ "<h3>You've received a request from " + borrowerName + " to borrow your tool: " + toolName + "</h3>"
+					+ "<br>Please <a href=\"https://community-shed.herokuapp.com\">login</a> and visit My Shed to view the pending request."
+					+ "</html>";
 
 			try {
 
@@ -31,8 +34,16 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 		}
 		
 		public void notifyToolBorrower(String emailAddress, String toolName, String ownerName, String status)	{
-			subject = "Notification of acceptance/denial message for tool borrower";
-			html = 	"<html>Your request to borrow the tool: " + toolName + " was " + status + " by " + ownerName + "</html>";
+			subject = "Your request to borrow " + toolName + " from " + ownerName + " has been " + status;
+			html = 	"<html>"
+					+ "<h3>Your request to borrow the tool: " + toolName + " was " + status + " by " + ownerName + "</h3>";
+					
+			if (status.equals("Approved"))	{
+				html = html + "<br>Go pick up your tool!</html>";
+			} else	{
+				html = html + "<br>Sorry!</html>";
+			}
+					
 
 			try {
 				emailer.sendSimpleMessage(emailAddress, subject, html);
